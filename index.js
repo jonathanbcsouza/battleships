@@ -17,6 +17,7 @@ const startBtn = document.getElementById('startButton');
 startBtn.addEventListener('click', playGame);
 const restartBtn = document.getElementById('restart');
 restartBtn.addEventListener('click', resetGame);
+restartBtn.style.display = 'none';
 
 let welcomeMsgElement = document.getElementById('welcome_msg');
 let rockets = document.getElementById('rockets');

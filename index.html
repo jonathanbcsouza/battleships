@@ -1,21 +1,44 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battleship Game</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
-    <h1>Battleship Game</h1>
-    <p id="welcome_msg"></p>
-    <span>🚀 <span id="rockets"></span></span>
-    <span>💥 <span id="ships_destroyed"></span></span>
-    <span>🏆 <span id="trophies"></span></span>
-    <br>
-    <button id="startButton">Start</button>
-    <button id="restart" style="display: none;">Restart</button>
-    <br>
-    <p id="board"></p>
+    <header>
+        <h1>Battleship Game</h1>
+    </header>
+
+    <main>
+        <p id="welcome_msg"></p>
+        <section class="game-stats">
+            <div class="stat-item">
+                <span class="emoji">🚀</span>
+                <span id="rockets"></span>
+            </div>
+            <div class="stat-item">
+                <span class="emoji">💥</span>
+                <span id="ships_destroyed"></span>
+            </div>
+            <div class="stat-item">
+                <span class="emoji">🏆</span>
+                <span id="trophies"></span>
+            </div>
+        </section>
+
+        <section class="game-controls">
+            <button id="startButton" aria-label="Start game">Start</button>
+            <button id="restart" aria-label="Restart game">Restart</button>
+        </section>
+
+        <section class="game-board">
+            <p id="board"></p>
+        </section>
+    </main>
 
     <script src="index.js"></script>
 </body>
