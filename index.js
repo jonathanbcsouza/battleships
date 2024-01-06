@@ -11,6 +11,7 @@ import {
   setGameState,
   updateScreen,
   useRockets,
+  getValidCoordinate,
 } from './helpers/helpers.js';
 
 const gridSize = 4;
@@ -34,7 +35,6 @@ let rocketsCount = numRockets;
 let shipsDestroyedCount = 0;
 let trophiesCount = 0;
 let gameState = 'init';
-let closestShipDist = gridSize;
 
 let welcomeMsgElement = document.getElementById('welcome_msg');
 let rockets = document.getElementById('rockets');
@@ -77,14 +77,15 @@ function playGame() {
   if (gameState === 'playing') {
     alert('Time to attack! Adjust your aim by entering the coordinates.');
 
-    const coordinateX = prompt('Select your X coordinate.');
-    const coordinateY = prompt('Select your Y coordinate.');
+    const coordinateX = getValidCoordinate('x', gridSize);
+    const coordinateY = getValidCoordinate('y', gridSize);
+
     const shiftedX = coordinateX - 1;
     const shiftedY = coordinateY - 1;
 
-    const shipsCoordinates = locateShips(grid, gridSize);
+    const shipsCoordinates = locateShips(grid);
 
-    closestShipDist = getClosestShipDistance(
+    const closestShipDist = getClosestShipDistance(
       shiftedX,
       shiftedY,
       shipsCoordinates

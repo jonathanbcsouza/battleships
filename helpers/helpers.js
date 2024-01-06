@@ -55,7 +55,8 @@ export function revealGrid(grid) {
 }
 
 // Game Logic
-export function locateShips(grid, gridSize) {
+export function locateShips(grid) {
+  const gridSize = getArraySize(grid);
   let shipsLocation = [];
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
@@ -149,4 +150,23 @@ export function radarFeedback(d) {
 
 export function updateScreen(element, value) {
   element.innerHTML = value;
+}
+
+export function getArraySize(array) {
+  return array.length;
+}
+
+export function getValidCoordinate(coordinate, maxNumber) {
+  let promptMessage = `Select your ${coordinate} coordinate (1 to ${maxNumber}):`;
+
+  let coordinateValue;
+  do {
+    coordinateValue = parseInt(prompt(promptMessage), 10);
+  } while (
+    isNaN(coordinateValue) ||
+    coordinateValue <= 0 ||
+    coordinateValue > maxNumber
+  );
+
+  return coordinateValue;
 }
