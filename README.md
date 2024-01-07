@@ -17,20 +17,26 @@ Some things to note:
 * Please include guidance on how to install and execute your solution.
 * Please create a merge request when you are done.
 
-### How to Run the Game
+### Running the Game
 
-You can run the game using a local development server. Here are two methods:
+1. Install the project dependencies:
 
-#### Method 1: Using `http-server`
+   ```
+   npm install
+   ```
 
-1. Install `http-server` globally via npm: `npm install --global http-server`.
-2. Navigate to your project directory in the terminal.
-3. Start the server: `http-server`.
-4. Access the game in your web browser at `http://localhost:8080`.
+2. Start the game locally:
+   ```
+   npm run dev
+   ```
+   The game will open in a new browser window.
 
-#### Method 2: Using "Go Live" in Visual Studio Code
+### Running the Tests
 
-1. Install the "Live Server" extension in Visual Studio Code.
-2. Open your project in Visual Studio Code.
-3. Right-click on the `index.html` file and select "Open with Live Server".
-4. The game will open in a new browser window.
+To run the tests, use the following command:
+
+```
+npm test
+```
+
+This will start Jest and run all tests in the project.
