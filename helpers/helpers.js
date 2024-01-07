@@ -99,6 +99,11 @@ export function resetGame() {
   location.reload();
 }
 
+export function resetScore() {
+  localStorage.removeItem('trophiesCount');
+  location.reload();
+}
+
 // Ui Updates
 export function launchRocket(x, y) {
   alert(`Rocket launched to ${x + 1}, ${y + 1}!`);

@@ -9,6 +9,7 @@ import {
   radarFeedback,
   removeShip,
   resetGame,
+  resetScore,
   revealGrid,
   setGameState,
   updateScreen,
@@ -23,7 +24,6 @@ const welcomeMsg =
   `<br>` +
   `Good luck!`;
 
-const board = document.getElementById('board');
 const startBtn = document.getElementById('startButton');
 const restartBtn = document.getElementById('restart');
 
@@ -31,7 +31,7 @@ let grid = [];
 let shipsCount = config.NUM_SHIPS;
 let rocketsCount = config.NUM_ROCKETS;
 let shipsDestroyedCount = 0;
-let trophiesCount = 0;
+let trophiesCount = Number(localStorage.getItem('trophiesCount')) || 0;
 let gameState = 'init';
 
 let welcomeMsgElement = document.getElementById('welcome_msg');
@@ -56,17 +56,21 @@ updateScreen(rocketsIcon, config.ROCKET_ICON);
 updateScreen(shipsDestroyedIcon, config.EXPLOSION_ICON);
 updateScreen(trophiesIcon, config.TROPHIE_ICON);
 
-function playGame() {
-  startBtn.style.display = 'none';
+resetScoreButton.addEventListener('click', resetScore);
 
+if (trophiesCount > 0) {
+  resetScoreButton.style.display = 'block';
+} else {
+  resetScoreButton.style.display = 'none';
+}
+
+function playGame() {
   if (gameState === 'init') {
-    shipsCount = config.NUM_SHIPS;
-    rocketsCount = config.NUM_ROCKETS;
-    shipsDestroyedCount = 0;
+    gameState = 'playing';
+    resetScoreButton.style.display = 'none';
     grid = buildGrid(config.GRID_SIZE);
     placeShips(grid, config.GRID_SIZE, config.NUM_SHIPS);
     console.table(grid);
-    gameState = 'playing';
   }
 
   if (gameState === 'playing') {
@@ -106,22 +110,19 @@ function playGame() {
 
     switch (status) {
       case 'lose':
-        shipsCount = config.NUM_SHIPS;
-        rocketsCount = config.NUM_ROCKETS;
-        gameState = 'init';
         updateScreen(welcomeMsgElement, msgGameOver);
         updateScreen(restartBtn, 'Try Again');
+        startBtn.style.display = 'none';
         restartBtn.style.display = 'block';
         revealGrid(grid);
         break;
       case 'win':
-        shipsCount = config.NUM_SHIPS;
-        rocketsCount = config.NUM_ROCKETS;
-        gameState = 'init';
         trophiesCount = trophiesCount + 1;
-        updateScreen(welcomeMsgElement, msgYouWin);
-        updateScreen(restartBtn, 'Start a New Game');
         updateScreen(trophies, trophiesCount);
+        updateScreen(welcomeMsgElement, msgYouWin);
+        updateScreen(restartBtn, 'Restart Game');
+        localStorage.setItem('trophiesCount', trophiesCount);
+        startBtn.style.display = 'none';
         restartBtn.style.display = 'block';
         revealGrid(grid);
         break;
@@ -134,7 +135,7 @@ function playGame() {
         );
         restartBtn.style.display = 'none';
         startBtn.style.display = 'block';
-        updateScreen(startButton, 'Continue Game ➡️');
+        updateScreen(startBtn, 'Continue Game ➡️');
     }
   }
 }
