@@ -16,3 +16,21 @@ Some things to note:
 * Feel free to use your language of choice. We prefer C#, Java, JavaScript, TypeScript, or Python.
 * Please include guidance on how to install and execute your solution.
 * Please create a merge request when you are done.
+
+### How to Run the Game
+
+You can run the game using a local development server. Here are two methods:
+
+#### Method 1: Using `http-server`
+
+1. Install `http-server` globally via npm: `npm install --global http-server`.
+2. Navigate to your project directory in the terminal.
+3. Start the server: `http-server`.
+4. Access the game in your web browser at `http://localhost:8080`.
+
+#### Method 2: Using "Go Live" in Visual Studio Code
+
+1. Install the "Live Server" extension in Visual Studio Code.
+2. Open your project in Visual Studio Code.
+3. Right-click on the `index.html` file and select "Open with Live Server".
+4. The game will open in a new browser window.
