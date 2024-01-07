@@ -68,22 +68,15 @@ export function locateShips(grid, numShips) {
 }
 
 export function getClosestShipDistance(shiftedX, shiftedY, shipsCoordinates) {
-  const distances = [];
-
-  for (let i = 0; i < shipsCoordinates.length; i++) {
-    const distFromShip =
-      Math.abs(shiftedX - shipsCoordinates[i][0]) +
-      Math.abs(shiftedY - shipsCoordinates[i][1]);
-
-    distances.push(distFromShip);
-  }
+  const distances = shipsCoordinates.map(
+    ([x, y]) => Math.abs(shiftedX - x) + Math.abs(shiftedY - y)
+  );
 
   return Math.min(...distances);
 }
 
 export function useRockets(rocketsCount) {
-  rocketsCount = rocketsCount - 1;
-  return rocketsCount;
+  return --rocketsCount;
 }
 
 export function setGameState(rocketsCount, shipsCount, gameState) {
@@ -134,12 +127,9 @@ export function updateScreen(element, value) {
 export function getValidCoordinate(coordinate, maxNumber) {
   let promptMessage = `Select your ${coordinate} coordinate (1 to ${maxNumber}):`;
 
-  console.log(typeof promptMessage);
-
   let coordinateValue;
   do {
     coordinateValue = parseInt(prompt(promptMessage), 10);
-    console.log(typeof coordinateValue);
   } while (
     isNaN(coordinateValue) ||
     coordinateValue <= 0 ||
