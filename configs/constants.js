@@ -9,6 +9,6 @@ export const ROCKET_ICON = '🚀';
 export const EXPLOSION_ICON = '💥';
 export const TROPHIE_ICON = '🏆';
 
-export const GRID_SIZE = 4;
-export const NUM_ROCKETS = 2;
+export const GRID_SIZE = 8;
+export const NUM_ROCKETS = 20;
 export const NUM_SHIPS = 2;
