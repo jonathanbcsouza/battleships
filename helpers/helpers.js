@@ -1,7 +1,4 @@
-const HIT_DIST = 0;
-const HOT_DIST = 1;
-const WARM_DIST = 3;
-const COLD_DIST = 5;
+import * as config from '../configs/constants.js';
 
 // Grid management
 export function buildGrid(size) {
@@ -10,7 +7,7 @@ export function buildGrid(size) {
   for (let i = 0; i < size; i++) {
     let rows = [];
     for (let j = 0; j < size; j++) {
-      rows.push(0);
+      rows.push(config.EMPTY_ICON);
     }
     columns.push(rows);
   }
@@ -25,8 +22,8 @@ export function placeShips(grid, gridSize, numShips) {
     const randomRow = Math.floor(Math.random() * gridSize);
     const randomCol = Math.floor(Math.random() * gridSize);
 
-    if (grid[randomRow][randomCol] == 0) {
-      grid[randomRow][randomCol] = 1;
+    if (grid[randomRow][randomCol] == config.EMPTY_ICON) {
+      grid[randomRow][randomCol] = config.SHIP_ICON;
       shipsPlaced++;
     }
   }
@@ -34,7 +31,7 @@ export function placeShips(grid, gridSize, numShips) {
 
 export function removeShip(grid, x, y) {
   console.log('removing ship', x, y);
-  grid[x][y] = null;
+  grid[x][y] = config.EXPLOSION_ICON;
   console.table(grid);
   return grid;
 }
@@ -60,7 +57,7 @@ export function locateShips(grid) {
   let shipsLocation = [];
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
-      if (grid[i][j] === 1) {
+      if (grid[i][j] === config.SHIP_ICON) {
         shipsLocation.push([i, j]);
       }
     }
@@ -134,13 +131,13 @@ export function launchRocket(x, y) {
 }
 
 export function radarFeedback(d) {
-  if (d === HIT_DIST) {
+  if (d === config.HIT_DIST) {
     alert('HIT!');
     alert('BOOM!');
     return true;
-  } else if (d >= COLD_DIST) {
+  } else if (d >= config.COLD_DIST) {
     alert('COLD');
-  } else if (d >= WARM_DIST) {
+  } else if (d >= config.WARM_DIST) {
     alert('WARM');
   } else {
     alert('HOT');
@@ -159,9 +156,12 @@ export function getArraySize(array) {
 export function getValidCoordinate(coordinate, maxNumber) {
   let promptMessage = `Select your ${coordinate} coordinate (1 to ${maxNumber}):`;
 
+  console.log(typeof promptMessage);
+
   let coordinateValue;
   do {
     coordinateValue = parseInt(prompt(promptMessage), 10);
+    console.log(typeof coordinateValue);
   } while (
     isNaN(coordinateValue) ||
     coordinateValue <= 0 ||
