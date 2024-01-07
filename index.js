@@ -3,6 +3,7 @@ import * as config from './configs/constants.js';
 import {
   buildGrid,
   getClosestShipDistance,
+  getCoordinates,
   launchRocket,
   locateShips,
   placeShips,
@@ -14,72 +15,72 @@ import {
   setGameState,
   updateScreen,
   useRockets,
-  getCoordinates,
 } from './helpers/helpers.js';
 
-const msgGameOver = `Game Over! You Lose! 😭`;
-const msgYouWin = `Congratulations, You Win! 🎉`;
-const welcomeMsg =
-  `Welcome aboard. You are in the middle of a war and your mission is to destroy the remaining ${config.NUM_SHIPS} opponent ships! You have ${config.NUM_ROCKETS} rockets left. You can use the rockets to attack the ships. ` +
-  `<br>` +
-  `Good luck!`;
+const msg = {
+  welcome: `Welcome aboard. You are in the middle of a war and your mission is to destroy the remaining ${config.NUM_SHIPS} opponent ships! You have ${config.NUM_ROCKETS} rockets left. You can use the rockets to attack the ships. <br>Good luck!`,
+  youWin: `Congratulations, You Win! 🎉`,
+  gameOver: `Game Over! You Lose! 😭`,
+};
 
-const startBtn = document.getElementById('startButton');
-const restartBtn = document.getElementById('restart');
+const uiElements = {
+  resetScoreButton: document.getElementById('resetScoreButton'),
+  restartBtn: document.getElementById('restart'),
+  rockets: document.getElementById('rockets'),
+  rocketsIcon: document.getElementById('rocketsIcon'),
+  shipsDestroyed: document.getElementById('shipsDestroyed'),
+  shipsDestroyedIcon: document.getElementById('shipsDestroyedIcon'),
+  startBtn: document.getElementById('startButton'),
+  trophies: document.getElementById('trophies'),
+  trophiesIcon: document.getElementById('trophiesIcon'),
+  welcomeMsg: document.getElementById('welcome_msg'),
+  welcomeMsgElement: document.getElementById('welcome_msg'),
+};
 
-let grid = [];
-let shipsCount = config.NUM_SHIPS;
-let rocketsCount = config.NUM_ROCKETS;
-let shipsDestroyedCount = 0;
-let trophiesCount = Number(localStorage.getItem('trophiesCount')) || 0;
-let gameState = 'init';
+let gameState = {
+  grid: [],
+  shipsCount: config.NUM_SHIPS,
+  rocketsCount: config.NUM_ROCKETS,
+  shipsDestroyedCount: 0,
+  trophiesCount: Number(localStorage.getItem('trophiesCount')) || 0,
+  state: 'init',
+};
 
-let welcomeMsgElement = document.getElementById('welcome_msg');
-let rockets = document.getElementById('rockets');
-let shipsDestroyed = document.getElementById('shipsDestroyed');
-let trophies = document.getElementById('trophies');
+uiElements.startBtn.addEventListener('click', playGame);
+uiElements.restartBtn.style.display = 'none';
+uiElements.restartBtn.addEventListener('click', resetGame);
+uiElements.resetScoreButton.addEventListener('click', resetScore);
 
-let rocketsIcon = document.getElementById('rocketsIcon');
-let shipsDestroyedIcon = document.getElementById('shipsDestroyedIcon');
-let trophiesIcon = document.getElementById('trophiesIcon');
+updateScreen(uiElements.welcomeMsgElement, msg.welcome);
+updateScreen(uiElements.rockets, config.NUM_ROCKETS);
+updateScreen(uiElements.shipsDestroyed, 0);
+updateScreen(uiElements.trophies, gameState.trophiesCount);
+updateScreen(uiElements.rocketsIcon, config.ROCKET_ICON);
+updateScreen(uiElements.shipsDestroyedIcon, config.EXPLOSION_ICON);
+updateScreen(uiElements.trophiesIcon, config.TROPHIE_ICON);
 
-startBtn.addEventListener('click', playGame);
-restartBtn.style.display = 'none';
-restartBtn.addEventListener('click', resetGame);
-
-updateScreen(welcomeMsgElement, welcomeMsg);
-updateScreen(rockets, config.NUM_ROCKETS);
-updateScreen(shipsDestroyed, 0);
-updateScreen(trophies, trophiesCount);
-
-updateScreen(rocketsIcon, config.ROCKET_ICON);
-updateScreen(shipsDestroyedIcon, config.EXPLOSION_ICON);
-updateScreen(trophiesIcon, config.TROPHIE_ICON);
-
-resetScoreButton.addEventListener('click', resetScore);
-
-if (trophiesCount > 0) {
-  resetScoreButton.style.display = 'block';
+if (gameState.trophiesCount > 0) {
+  uiElements.resetScoreButton.style.display = 'block';
 } else {
-  resetScoreButton.style.display = 'none';
+  uiElements.resetScoreButton.style.display = 'none';
 }
 
 function playGame() {
-  if (gameState === 'init') {
+  if (gameState.state === 'init') {
     initializeGame();
   }
 
-  if (gameState === 'playing') {
+  if (gameState.state === 'playing') {
     playTurn();
   }
 }
 
 function initializeGame() {
-  gameState = 'playing';
-  resetScoreButton.style.display = 'none';
-  grid = buildGrid(config.GRID_SIZE);
-  placeShips(grid, config.GRID_SIZE, config.NUM_SHIPS);
-  console.table(grid);
+  gameState.state = 'playing';
+  uiElements.resetScoreButton.style.display = 'none';
+  gameState.grid = buildGrid(config.GRID_SIZE);
+  placeShips(gameState.grid, config.GRID_SIZE, config.NUM_SHIPS);
+  console.table(gameState.grid);
 }
 
 function playTurn() {
@@ -87,7 +88,7 @@ function playTurn() {
 
   const { shiftedX, shiftedY } = getCoordinates();
 
-  const shipsCoordinates = locateShips(grid, config.NUM_SHIPS);
+  const shipsCoordinates = locateShips(gameState.grid, config.NUM_SHIPS);
 
   const closestShipDist = getClosestShipDistance(
     shiftedX,
@@ -95,26 +96,30 @@ function playTurn() {
     shipsCoordinates
   );
 
-  rocketsCount = useRockets(rocketsCount);
+  gameState.rocketsCount = useRockets(gameState.rocketsCount);
 
-  updateScreen(rockets, rocketsCount);
+  updateScreen(uiElements.rockets, gameState.rocketsCount);
 
   launchRocket(shiftedX, shiftedY);
 
   const isShipDestroyed = radarFeedback(closestShipDist);
 
   if (isShipDestroyed) {
-    grid = removeShip(grid, shiftedX, shiftedY);
-    shipsCount = shipsCount - 1;
-    shipsDestroyedCount = shipsDestroyedCount + 1;
-    updateScreen(shipsDestroyed, shipsDestroyedCount);
+    gameState.grid = removeShip(gameState.grid, shiftedX, shiftedY);
+    gameState.shipsCount = gameState.shipsCount - 1;
+    gameState.shipsDestroyedCount = gameState.shipsDestroyedCount + 1;
+    updateScreen(uiElements.shipsDestroyed, gameState.shipsDestroyedCount);
   }
 
   handleGameState();
 }
 
 function handleGameState() {
-  const state = setGameState(rocketsCount, shipsCount, gameState);
+  const state = setGameState(
+    gameState.rocketsCount,
+    gameState.shipsCount,
+    gameState.state
+  );
 
   switch (state) {
     case 'lose':
@@ -129,32 +134,32 @@ function handleGameState() {
 }
 
 function handleGameOver() {
-  updateScreen(welcomeMsgElement, msgGameOver);
-  updateScreen(restartBtn, 'Try Again');
-  startBtn.style.display = 'none';
-  restartBtn.style.display = 'block';
-  revealGrid(grid);
+  updateScreen(uiElements.welcomeMsgElement, msg.gameOver);
+  updateScreen(uiElements.restartBtn, 'Try Again');
+  uiElements.startBtn.style.display = 'none';
+  uiElements.restartBtn.style.display = 'block';
+  revealGrid(gameState.grid);
 }
 
 function handleGameWin() {
-  trophiesCount = trophiesCount + 1;
-  updateScreen(trophies, trophiesCount);
-  updateScreen(welcomeMsgElement, msgYouWin);
-  updateScreen(restartBtn, 'Restart Game');
-  localStorage.setItem('trophiesCount', trophiesCount);
-  startBtn.style.display = 'none';
-  restartBtn.style.display = 'block';
-  revealGrid(grid);
+  gameState.trophiesCount = gameState.trophiesCount + 1;
+  updateScreen(uiElements.trophies, gameState.trophiesCount);
+  updateScreen(uiElements.welcomeMsgElement, msg.youWin);
+  updateScreen(uiElements.restartBtn, 'Restart Game');
+  localStorage.setItem('gameState.trophiesCount', gameState.trophiesCount);
+  uiElements.startBtn.style.display = 'none';
+  uiElements.restartBtn.style.display = 'block';
+  revealGrid(gameState.grid);
 }
 
 function handleGameContinue() {
   updateScreen(
-    welcomeMsgElement,
+    uiElements.welcomeMsgElement,
     `🎙️ Roger!` +
       `<br>` +
-      `You have ${rocketsCount} rockets left and ${shipsCount} opponent ships remaining. Keep it Up!`
+      `You have ${gameState.rocketsCount} rockets left and ${gameState.shipsCount} opponent ships remaining. Keep it Up!`
   );
-  restartBtn.style.display = 'none';
-  startBtn.style.display = 'block';
-  updateScreen(startBtn, 'Continue Game ➡️');
+  uiElements.restartBtn.style.display = 'none';
+  uiElements.startBtn.style.display = 'block';
+  updateScreen(uiElements.startBtn, 'Continue Game ➡️');
 }
