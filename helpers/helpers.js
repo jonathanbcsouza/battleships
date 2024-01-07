@@ -129,7 +129,17 @@ export function updateScreen(element, value) {
   element.innerHTML = value;
 }
 
-export function getValidCoordinate(coordinate, maxNumber) {
+export function getCoordinates() {
+  const coordinateX = getValidCoordinates('x', config.GRID_SIZE);
+  const coordinateY = getValidCoordinates('y', config.GRID_SIZE);
+
+  const shiftedX = coordinateX - 1;
+  const shiftedY = coordinateY - 1;
+
+  return { shiftedX, shiftedY };
+}
+
+export function getValidCoordinates(coordinate, maxNumber) {
   let promptMessage = `Select your ${coordinate} coordinate (1 to ${maxNumber}):`;
 
   let coordinateValue;

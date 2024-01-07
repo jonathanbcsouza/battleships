@@ -14,7 +14,7 @@ import {
   setGameState,
   updateScreen,
   useRockets,
-  getValidCoordinate,
+  getCoordinates,
 } from './helpers/helpers.js';
 
 const msgGameOver = `Game Over! You Lose! 😭`;
@@ -66,76 +66,95 @@ if (trophiesCount > 0) {
 
 function playGame() {
   if (gameState === 'init') {
-    gameState = 'playing';
-    resetScoreButton.style.display = 'none';
-    grid = buildGrid(config.GRID_SIZE);
-    placeShips(grid, config.GRID_SIZE, config.NUM_SHIPS);
-    console.table(grid);
+    initializeGame();
   }
 
   if (gameState === 'playing') {
-    alert('Time to attack! Adjust your aim by entering the coordinates.');
-
-    const coordinateX = getValidCoordinate('x', config.GRID_SIZE);
-    const coordinateY = getValidCoordinate('y', config.GRID_SIZE);
-
-    const shiftedX = coordinateX - 1;
-    const shiftedY = coordinateY - 1;
-
-    const shipsCoordinates = locateShips(grid, config.NUM_SHIPS);
-
-    const closestShipDist = getClosestShipDistance(
-      shiftedX,
-      shiftedY,
-      shipsCoordinates
-    );
-
-    rocketsCount = useRockets(rocketsCount);
-
-    updateScreen(rockets, rocketsCount);
-
-    launchRocket(shiftedX, shiftedY);
-
-    const isShipDestroyed = radarFeedback(closestShipDist);
-
-    if (isShipDestroyed) {
-      grid = removeShip(grid, shiftedX, shiftedY);
-      shipsCount = shipsCount - 1;
-      shipsDestroyedCount = shipsDestroyedCount + 1;
-    }
-
-    updateScreen(shipsDestroyed, shipsDestroyedCount);
-
-    const status = setGameState(rocketsCount, shipsCount, gameState);
-
-    switch (status) {
-      case 'lose':
-        updateScreen(welcomeMsgElement, msgGameOver);
-        updateScreen(restartBtn, 'Try Again');
-        startBtn.style.display = 'none';
-        restartBtn.style.display = 'block';
-        revealGrid(grid);
-        break;
-      case 'win':
-        trophiesCount = trophiesCount + 1;
-        updateScreen(trophies, trophiesCount);
-        updateScreen(welcomeMsgElement, msgYouWin);
-        updateScreen(restartBtn, 'Restart Game');
-        localStorage.setItem('trophiesCount', trophiesCount);
-        startBtn.style.display = 'none';
-        restartBtn.style.display = 'block';
-        revealGrid(grid);
-        break;
-      default:
-        updateScreen(
-          welcomeMsgElement,
-          `🎙️ Roger!` +
-            `<br>` +
-            `You have ${rocketsCount} rockets left and ${shipsCount} opponent ships remaining. Keep it Up!`
-        );
-        restartBtn.style.display = 'none';
-        startBtn.style.display = 'block';
-        updateScreen(startBtn, 'Continue Game ➡️');
-    }
+    playTurn();
   }
+}
+
+function initializeGame() {
+  gameState = 'playing';
+  resetScoreButton.style.display = 'none';
+  grid = buildGrid(config.GRID_SIZE);
+  placeShips(grid, config.GRID_SIZE, config.NUM_SHIPS);
+  console.table(grid);
+}
+
+function playTurn() {
+  alert('Time to attack! Adjust your aim by entering the coordinates.');
+
+  const { shiftedX, shiftedY } = getCoordinates();
+
+  const shipsCoordinates = locateShips(grid, config.NUM_SHIPS);
+
+  const closestShipDist = getClosestShipDistance(
+    shiftedX,
+    shiftedY,
+    shipsCoordinates
+  );
+
+  rocketsCount = useRockets(rocketsCount);
+
+  updateScreen(rockets, rocketsCount);
+
+  launchRocket(shiftedX, shiftedY);
+
+  const isShipDestroyed = radarFeedback(closestShipDist);
+
+  if (isShipDestroyed) {
+    grid = removeShip(grid, shiftedX, shiftedY);
+    shipsCount = shipsCount - 1;
+    shipsDestroyedCount = shipsDestroyedCount + 1;
+    updateScreen(shipsDestroyed, shipsDestroyedCount);
+  }
+
+  handleGameState();
+}
+
+function handleGameState() {
+  const state = setGameState(rocketsCount, shipsCount, gameState);
+
+  switch (state) {
+    case 'lose':
+      handleGameOver();
+      break;
+    case 'win':
+      handleGameWin();
+      break;
+    default:
+      handleGameContinue();
+  }
+}
+
+function handleGameOver() {
+  updateScreen(welcomeMsgElement, msgGameOver);
+  updateScreen(restartBtn, 'Try Again');
+  startBtn.style.display = 'none';
+  restartBtn.style.display = 'block';
+  revealGrid(grid);
+}
+
+function handleGameWin() {
+  trophiesCount = trophiesCount + 1;
+  updateScreen(trophies, trophiesCount);
+  updateScreen(welcomeMsgElement, msgYouWin);
+  updateScreen(restartBtn, 'Restart Game');
+  localStorage.setItem('trophiesCount', trophiesCount);
+  startBtn.style.display = 'none';
+  restartBtn.style.display = 'block';
+  revealGrid(grid);
+}
+
+function handleGameContinue() {
+  updateScreen(
+    welcomeMsgElement,
+    `🎙️ Roger!` +
+      `<br>` +
+      `You have ${rocketsCount} rockets left and ${shipsCount} opponent ships remaining. Keep it Up!`
+  );
+  restartBtn.style.display = 'none';
+  startBtn.style.display = 'block';
+  updateScreen(startBtn, 'Continue Game ➡️');
 }
