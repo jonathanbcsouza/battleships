@@ -30,9 +30,7 @@ export function placeShips(grid, gridSize, numShips) {
 }
 
 export function removeShip(grid, x, y) {
-  console.log('removing ship', x, y);
   grid[x][y] = config.EXPLOSION_ICON;
-  console.table(grid);
   return grid;
 }
 
@@ -53,7 +51,7 @@ export function revealGrid(grid) {
 
 // Game Logic
 export function locateShips(grid) {
-  const gridSize = getArraySize(grid);
+  const gridSize = grid.length;
   let shipsLocation = [];
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
@@ -101,28 +99,8 @@ export function setGameState(rocketsCount, shipsCount, gameState) {
   return gameState;
 }
 
-export function resetGame(
-  welcomeMsg,
-  welcomeMsgElement,
-  numRockets,
-  rockets,
-  shipsDestroyed,
-  startBtn,
-  restartBtn,
-  board,
-  gameState
-) {
-  while (board.firstChild) {
-    board.removeChild(board.firstChild);
-  }
-  welcomeMsgElement.innerHTML = welcomeMsg;
-  rockets.innerHTML = numRockets;
-  shipsDestroyed.innerHTML = 0;
-
-  startBtn.style.display = 'block';
-  restartBtn.style.display = 'none';
-
-  gameState = 'init';
+export function resetGame() {
+  location.reload();
 }
 
 // Ui Updates
@@ -131,26 +109,23 @@ export function launchRocket(x, y) {
 }
 
 export function radarFeedback(d) {
+  let message = 'HOT';
+
   if (d === config.HIT_DIST) {
-    alert('HIT!');
-    alert('BOOM!');
-    return true;
+    message = 'HIT!\nBOOM!';
   } else if (d >= config.COLD_DIST) {
-    alert('COLD');
+    message = 'COLD';
   } else if (d >= config.WARM_DIST) {
-    alert('WARM');
-  } else {
-    alert('HOT');
+    message = 'WARM';
   }
-  return false;
+
+  alert(message);
+
+  return d === config.HIT_DIST;
 }
 
 export function updateScreen(element, value) {
   element.innerHTML = value;
-}
-
-export function getArraySize(array) {
-  return array.length;
 }
 
 export function getValidCoordinate(coordinate, maxNumber) {

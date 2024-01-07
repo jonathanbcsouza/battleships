@@ -45,19 +45,7 @@ let trophiesIcon = document.getElementById('trophiesIcon');
 
 startBtn.addEventListener('click', playGame);
 restartBtn.style.display = 'none';
-restartBtn.addEventListener('click', function () {
-  resetGame(
-    welcomeMsg,
-    welcomeMsgElement,
-    numRockets,
-    rockets,
-    shipsDestroyed,
-    startBtn,
-    restartBtn,
-    board,
-    gameState
-  );
-});
+restartBtn.addEventListener('click', resetGame);
 
 updateScreen(welcomeMsgElement, welcomeMsg);
 updateScreen(rockets, config.NUM_ROCKETS);
