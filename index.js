@@ -78,7 +78,7 @@ function playGame() {
     const shiftedX = coordinateX - 1;
     const shiftedY = coordinateY - 1;
 
-    const shipsCoordinates = locateShips(grid);
+    const shipsCoordinates = locateShips(grid, config.NUM_SHIPS);
 
     const closestShipDist = getClosestShipDistance(
       shiftedX,

@@ -50,13 +50,16 @@ export function revealGrid(grid) {
 }
 
 // Game Logic
-export function locateShips(grid) {
+export function locateShips(grid, numShips) {
   const gridSize = grid.length;
   let shipsLocation = [];
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
       if (grid[i][j] === config.SHIP_ICON) {
         shipsLocation.push([i, j]);
+        if (shipsLocation.length === numShips) {
+          return shipsLocation;
+        }
       }
     }
   }
