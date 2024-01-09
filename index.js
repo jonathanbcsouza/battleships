@@ -54,7 +54,6 @@ uiElements.resetScoreButton.addEventListener('click', resetScore);
 updateScreen(uiElements.welcomeMsgElement, msg.welcome);
 updateScreen(uiElements.rockets, config.NUM_ROCKETS);
 updateScreen(uiElements.shipsDestroyed, 0);
-updateScreen(uiElements.trophies, gameState.trophiesCount);
 updateScreen(uiElements.rocketsIcon, config.ROCKET_ICON);
 updateScreen(uiElements.shipsDestroyedIcon, config.EXPLOSION_ICON);
 updateScreen(uiElements.trophiesIcon, config.TROPHIE_ICON);
