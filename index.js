@@ -1,6 +1,7 @@
 import * as config from './configs/constants.js';
 
 import {
+  addTrophy,
   buildGrid,
   getClosestShipDistance,
   getCoordinates,
@@ -17,12 +18,6 @@ import {
   useRockets,
 } from './helpers/helpers.js';
 
-const msg = {
-  welcome: `Welcome aboard. You are in the middle of a war and your mission is to destroy the remaining ${config.NUM_SHIPS} opponent ships! You have ${config.NUM_ROCKETS} rockets left. You can use the rockets to attack the ships. <br>Good luck!`,
-  youWin: `Congratulations, You Win! 🎉`,
-  gameOver: `Game Over! You Lose! 😭`,
-};
-
 const uiElements = {
   resetScoreButton: document.getElementById('resetScoreButton'),
   restartBtn: document.getElementById('restart'),
@@ -31,10 +26,9 @@ const uiElements = {
   shipsDestroyed: document.getElementById('shipsDestroyed'),
   shipsDestroyedIcon: document.getElementById('shipsDestroyedIcon'),
   startBtn: document.getElementById('startButton'),
-  trophies: document.getElementById('trophies'),
   trophiesIcon: document.getElementById('trophiesIcon'),
-  welcomeMsg: document.getElementById('welcome_msg'),
-  welcomeMsgElement: document.getElementById('welcome_msg'),
+  userNameInput: document.getElementById('username'),
+  msgElement: document.getElementById('msgElement'),
 };
 
 let gameState = {
@@ -42,27 +36,32 @@ let gameState = {
   shipsCount: config.NUM_SHIPS,
   rocketsCount: config.NUM_ROCKETS,
   shipsDestroyedCount: 0,
-  trophiesCount: Number(localStorage.getItem('trophiesCount')) || 0,
   state: 'init',
+  username: uiElements.userNameInput.value,
+};
+
+const msg = {
+  welcome: `Welcome aboard. You are in the middle of a war and your mission is to destroy the remaining ${config.NUM_SHIPS} opponent ships! You have ${config.NUM_ROCKETS} rockets left. You can use the rockets to attack the ships. <br>Good luck!`,
+  youWin: `Congratulations, You Win! 🎉`,
+  gameOver: `Game Over! You Lose! 😭`,
 };
 
 uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
 uiElements.restartBtn.addEventListener('click', resetGame);
-uiElements.resetScoreButton.addEventListener('click', resetScore);
 
-updateScreen(uiElements.welcomeMsgElement, msg.welcome);
+if (uiElements.resetScoreButton) {
+  uiElements.resetScoreButton.addEventListener('click', () =>
+    resetScore(gameState.username)
+  );
+}
+
+updateScreen(uiElements.msgElement, msg.welcome);
 updateScreen(uiElements.rockets, config.NUM_ROCKETS);
 updateScreen(uiElements.shipsDestroyed, 0);
 updateScreen(uiElements.rocketsIcon, config.ROCKET_ICON);
 updateScreen(uiElements.shipsDestroyedIcon, config.EXPLOSION_ICON);
 updateScreen(uiElements.trophiesIcon, config.TROPHIE_ICON);
-
-if (gameState.trophiesCount > 0) {
-  uiElements.resetScoreButton.style.display = 'block';
-} else {
-  uiElements.resetScoreButton.style.display = 'none';
-}
 
 function playGame() {
   if (gameState.state === 'init') {
@@ -76,15 +75,16 @@ function playGame() {
 
 function initializeGame() {
   gameState.state = 'playing';
-  uiElements.resetScoreButton.style.display = 'none';
   gameState.grid = buildGrid(config.GRID_SIZE);
   placeShips(gameState.grid, config.GRID_SIZE, config.NUM_SHIPS);
   console.table(gameState.grid);
+
+  if (uiElements.resetScoreButton) {
+    uiElements.resetScoreButton.style.display = 'none';
+  }
 }
 
 function playTurn() {
-  alert('Time to attack! Adjust your aim by entering the coordinates.');
-
   const { shiftedX, shiftedY } = getCoordinates();
 
   const shipsCoordinates = locateShips(gameState.grid, config.NUM_SHIPS);
@@ -94,6 +94,8 @@ function playTurn() {
     shiftedY,
     shipsCoordinates
   );
+
+  alert('Time to attack! Adjust your aim by entering the coordinates.');
 
   gameState.rocketsCount = useRockets(gameState.rocketsCount);
 
@@ -132,42 +134,31 @@ function handleGameState() {
   }
 }
 
-function handleGameOver() {
-  updateScreen(uiElements.welcomeMsgElement, msg.gameOver);
-  updateScreen(uiElements.restartBtn, 'Try Again');
-  uiElements.startBtn.style.display = 'none';
-  uiElements.restartBtn.style.display = 'block';
-  revealGrid(gameState.grid);
-}
-
-function handleGameWin() {
-  gameState.trophiesCount = gameState.trophiesCount + 1;
-  updateScreen(uiElements.trophies, gameState.trophiesCount);
-  updateScreen(uiElements.welcomeMsgElement, msg.youWin);
-  updateScreen(uiElements.restartBtn, 'Restart Game');
-  postTrophyData(gameState.trophiesCount);
-  uiElements.startBtn.style.display = 'none';
-  uiElements.restartBtn.style.display = 'block';
-  revealGrid(gameState.grid);
-}
-
 function handleGameContinue() {
   updateScreen(
-    uiElements.welcomeMsgElement,
+    uiElements.msgElement,
     `🎙️ Roger!` +
       `<br>` +
       `You have ${gameState.rocketsCount} rockets left and ${gameState.shipsCount} opponent ships remaining. Keep it Up!`
   );
-  uiElements.restartBtn.style.display = 'none';
-  uiElements.startBtn.style.display = 'block';
   updateScreen(uiElements.startBtn, 'Continue Game ➡️');
+  updateScreen(uiElements.restartBtn, 'Restart 🔄');
+  uiElements.startBtn.style.display = 'block';
+  uiElements.restartBtn.style.display = 'block';
 }
 
-function postTrophyData(trophyCount) {
-  const form = document.getElementById('form');
-  const trophyField = document.getElementById('trophy');
+function handleGameOver() {
+  updateScreen(uiElements.msgElement, msg.gameOver);
+  updateScreen(uiElements.restartBtn, 'Try Again 🔄');
+  revealGrid(gameState.grid);
+  uiElements.startBtn.style.display = 'none';
+}
 
-  trophyField.value = trophyCount;
-
-  form.submit();
+function handleGameWin() {
+  updateScreen(uiElements.msgElement, msg.youWin);
+  updateScreen(uiElements.restartBtn, 'Play Again 🔄');
+  addTrophy(gameState.username);
+  revealGrid(gameState.grid);
+  uiElements.startBtn.style.display = 'none';
+  uiElements.restartBtn.style.display = 'block';
 }

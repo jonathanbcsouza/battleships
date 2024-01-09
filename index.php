@@ -17,30 +17,29 @@
     </header>
 
     <main>
-        <form id="form" method="post" action="saveTrophy.php">
-            <input id="username" name="username" placeholder="Enter your username" value="<?php echo $logged_user; ?>">
-            <p id="welcome_msg"></p>
-            <section class="game-stats">
-                <div class="stat-item">
-                    <span id="rocketsIcon"></span>
-                    <span id="rockets"></span>
-                </div>
-                <div class="stat-item">
-                    <span id="shipsDestroyedIcon"></span>
-                    <span id="shipsDestroyed"></span>
-                </div>
-                <div class="stat-item">
-                    <span id="trophiesIcon"></span>
-                    <span id="trophies"><?php echo $trophies; ?></span>
-                    <input id="trophy" type="hidden" name="trophies">
-                </div>
-            </section>
-        </form>
+        <input id="username" name="username" placeholder="Enter your username" value="<?php echo $logged_user; ?>">
+        <p id="msgElement"></p>
+        <section class="game-stats">
+            <div class="stat-item">
+                <span id="rocketsIcon"></span>
+                <span id="rockets"></span>
+            </div>
+            <div class="stat-item">
+                <span id="shipsDestroyedIcon"></span>
+                <span id="shipsDestroyed"></span>
+            </div>
+            <div class="stat-item">
+                <span id="trophiesIcon"></span>
+                <span id="trophies"><?php echo $trophies; ?></span>
+            </div>
+        </section>
 
         <section class="game-controls">
             <button id="startButton" aria-label="Start game">Play</button>
             <button id="restart" aria-label="Restart game">Restart</button>
-            <button id="resetScoreButton">Reset Score</button>
+            <?php if ($trophies > 0) : ?>
+                <button id="resetScoreButton">Reset Score</button>
+            <?php endif; ?>
         </section>
 
         <section class="game-board">

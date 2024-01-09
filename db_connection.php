@@ -41,7 +41,7 @@ $create_table = "CREATE TABLE IF NOT EXISTS $table_name (
 $conn->query($create_table);
 
 // Select the trophies from the logged user
-// $trophies = 0;
+$trophies = 0;
 
 if ($stmt = $conn->prepare("SELECT trophies FROM users WHERE username = ?")) {
     $stmt->bind_param("s", $logged_user);

@@ -99,11 +99,6 @@ export function resetGame() {
   location.reload();
 }
 
-export function resetScore() {
-  localStorage.removeItem('trophiesCount');
-  location.reload();
-}
-
 // Ui Updates
 export function launchRocket(x, y) {
   alert(`Rocket launched to ${x + 1}, ${y + 1}!`);
@@ -152,4 +147,49 @@ export function getValidCoordinates(coordinate, maxNumber) {
   );
 
   return coordinateValue;
+}
+
+// DB Operations
+
+export function addTrophy(username) {
+  alert('Trophy Earned!');
+  fetch('saveTrophies.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      username: username,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then((data) => console.log(data))
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
+export function resetScore(username) {
+  alert('Score Reset!');
+  fetch('resetTrophies.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      username: username,
+    }),
+  })
+    .then((response) => response.text())
+    .then((data) => console.log(data))
+    .catch((error) => {
+      console.error('Error to reset data:', error);
+    });
+
+  location.reload();
 }
