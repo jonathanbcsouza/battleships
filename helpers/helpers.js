@@ -150,16 +150,16 @@ export function getValidCoordinates(coordinate, maxNumber) {
 }
 
 // DB Operations
-
-export function addTrophy(username) {
-  alert('Trophy Earned!');
-  fetch('saveTrophies.php', {
+function handleScore(username, action) {
+  alert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
+  fetch('handleUserScore.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
       username: username,
+      action: action,
     }),
   })
     .then((response) => {
@@ -168,29 +168,21 @@ export function addTrophy(username) {
       }
       return response.text();
     })
-    .then((data) => console.log(data))
+    .then((data) => {
+      console.log(data);
+      if (action === 'reset') {
+        location.reload();
+      }
+    })
     .catch((error) => {
       console.error('Error:', error);
     });
 }
 
+export function addScore(username) {
+  handleScore(username, 'add');
+}
+
 export function resetScore(username) {
-  alert('Score Reset!');
-  fetch('resetTrophies.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      username: username,
-    }),
-  })
-    .then((response) => response.text())
-    .then((data) => {
-      console.log(data);
-      location.reload();
-    })
-    .catch((error) => {
-      console.error('Error to reset data:', error);
-    });
+  handleScore(username, 'reset');
 }

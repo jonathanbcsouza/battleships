@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Load env variables
 $env = array_reduce(
     explode("\n", file_get_contents('.env.local')),
@@ -17,8 +18,7 @@ $password = $env['PASSWORD'];
 $db_name = "battleship_db";
 $table_name = "users";
 
-// Temporary
-$logged_user = $env['LOGGED_USER'];
+$logged_user = $_SESSION['username'] ?? null;
 
 // Create connection
 $conn = new mysqli($server_name, $db_username, $password);

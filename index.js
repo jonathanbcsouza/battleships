@@ -1,7 +1,7 @@
 import * as config from './configs/constants.js';
 
 import {
-  addTrophy,
+  addScore,
   buildGrid,
   getClosestShipDistance,
   getCoordinates,
@@ -37,7 +37,6 @@ let gameState = {
   rocketsCount: config.NUM_ROCKETS,
   shipsDestroyedCount: 0,
   state: 'init',
-  username: uiElements.userNameInput.value,
 };
 
 const msg = {
@@ -46,14 +45,16 @@ const msg = {
   gameOver: `Game Over! You Lose! 😭`,
 };
 
+let username = uiElements.userNameInput;
+
 uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
 uiElements.restartBtn.addEventListener('click', resetGame);
 
 if (uiElements.resetScoreButton) {
-  uiElements.resetScoreButton.addEventListener('click', () =>
-    resetScore(gameState.username)
-  );
+  uiElements.resetScoreButton.addEventListener('click', () => {
+    resetScore(username.value);
+  });
 }
 
 updateScreen(uiElements.msgElement, msg.welcome);
@@ -82,13 +83,12 @@ function initializeGame() {
   if (uiElements.resetScoreButton) {
     uiElements.resetScoreButton.style.display = 'none';
   }
+  uiElements.userNameInput.style.display = 'none';
 }
 
 function playTurn() {
   const { shiftedX, shiftedY } = getCoordinates();
-
   const shipsCoordinates = locateShips(gameState.grid, config.NUM_SHIPS);
-
   const closestShipDist = getClosestShipDistance(
     shiftedX,
     shiftedY,
@@ -157,7 +157,7 @@ function handleGameOver() {
 function handleGameWin() {
   updateScreen(uiElements.msgElement, msg.youWin);
   updateScreen(uiElements.restartBtn, 'Play Again 🔄');
-  addTrophy(gameState.username);
+  addScore(username.value);
   revealGrid(gameState.grid);
   uiElements.startBtn.style.display = 'none';
   uiElements.restartBtn.style.display = 'block';
