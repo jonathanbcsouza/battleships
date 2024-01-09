@@ -43,7 +43,8 @@ $create_table = "CREATE TABLE IF NOT EXISTS $table_name (
 $conn->query($create_table);
 
 $controller = new UserController($conn);
+$controller->handleRequest();
 $trophies = $controller->getTrophies($logged_user);
 
-// require_once 'views/user.php';
-// require_once 'views/index.php';
+require_once 'controllers/UserController.php';
+require_once 'db_connection.php';

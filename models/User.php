@@ -23,4 +23,18 @@ class User
 
         return $trophies;
     }
+
+    public function addTrophy($username) {
+        $sql = "INSERT INTO users (username, trophies) VALUES (?, 1) ON DUPLICATE KEY UPDATE trophies = trophies + 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $username);
+        return $stmt->execute();
+    }
+
+    public function resetTrophies($username) {
+        $sql = "UPDATE users SET trophies = 0 WHERE username = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $username);
+        return $stmt->execute();
+    }
 }
