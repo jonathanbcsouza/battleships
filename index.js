@@ -146,7 +146,7 @@ function handleGameWin() {
   updateScreen(uiElements.trophies, gameState.trophiesCount);
   updateScreen(uiElements.welcomeMsgElement, msg.youWin);
   updateScreen(uiElements.restartBtn, 'Restart Game');
-  localStorage.setItem('trophiesCount', gameState.trophiesCount);
+  postTrophyData(gameState.trophiesCount);
   uiElements.startBtn.style.display = 'none';
   uiElements.restartBtn.style.display = 'block';
   revealGrid(gameState.grid);
@@ -162,4 +162,13 @@ function handleGameContinue() {
   uiElements.restartBtn.style.display = 'none';
   uiElements.startBtn.style.display = 'block';
   updateScreen(uiElements.startBtn, 'Continue Game ➡️');
+}
+
+function postTrophyData(trophyCount) {
+  const form = document.getElementById('form');
+  const trophyField = document.getElementById('trophy');
+
+  trophyField.value = trophyCount;
+
+  form.submit();
 }
