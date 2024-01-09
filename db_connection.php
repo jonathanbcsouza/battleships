@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once 'controllers/UserController.php';
+
 // Load env variables
 $env = array_reduce(
     explode("\n", file_get_contents('.env.local')),
@@ -40,15 +42,8 @@ $create_table = "CREATE TABLE IF NOT EXISTS $table_name (
 )";
 $conn->query($create_table);
 
-// Select the trophies from the logged user
-$trophies = 0;
+$controller = new UserController($conn);
+$trophies = $controller->getTrophies($logged_user);
 
-if ($stmt = $conn->prepare("SELECT trophies FROM users WHERE username = ?")) {
-    $stmt->bind_param("s", $logged_user);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-        $trophies = $row['trophies'];
-    }
-    $stmt->close();
-}
+// require_once 'views/user.php';
+// require_once 'views/index.php';
