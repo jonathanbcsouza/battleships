@@ -124,9 +124,10 @@ export function updateScreen(element, value) {
   element.innerHTML = value;
 }
 
-export function getCoordinates() {
-  const coordinateX = getValidCoordinates('x', config.GRID_SIZE);
-  const coordinateY = getValidCoordinates('y', config.GRID_SIZE);
+export function selectCoordinates() {
+  alert('Time to attack! Adjust your aim by entering the coordinates.');
+  const coordinateX = getValidCoordinates('X', config.GRID_SIZE);
+  const coordinateY = getValidCoordinates('Y', config.GRID_SIZE);
 
   const shiftedX = coordinateX - 1;
   const shiftedY = coordinateY - 1;
@@ -135,8 +136,7 @@ export function getCoordinates() {
 }
 
 export function getValidCoordinates(coordinate, maxNumber) {
-  let promptMessage = `Select your ${coordinate} coordinate (1 to ${maxNumber}):`;
-
+  let promptMessage = `Please enter your ${coordinate} coordinate. Choose a number between 1 and ${maxNumber}:`;
   let coordinateValue;
   do {
     coordinateValue = parseInt(prompt(promptMessage), 10);

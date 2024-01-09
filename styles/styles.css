@@ -37,12 +37,16 @@ input {
   border: 1px solid var(--button-bg-color);
   border-radius: 4px;
   margin: 5px 0;
-  width: 30%;
+  width: 40%;
   box-sizing: border-box;
   transition: border-color 0.3s ease;
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
   text-align: center;
+}
+
+input::placeholder {
+  font-size: calc(var(--base-font-size) * 0.9);
 }
 
 input:focus {

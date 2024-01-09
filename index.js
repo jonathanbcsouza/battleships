@@ -4,7 +4,6 @@ import {
   addScore,
   buildGrid,
   getClosestShipDistance,
-  getCoordinates,
   launchRocket,
   locateShips,
   placeShips,
@@ -13,22 +12,24 @@ import {
   resetGame,
   resetScore,
   revealGrid,
+  selectCoordinates,
   setGameState,
   updateScreen,
   useRockets,
 } from './helpers/helpers.js';
 
 const uiElements = {
-  resetScoreButton: document.getElementById('resetScoreButton'),
-  restartBtn: document.getElementById('restart'),
+  userNameInput: document.getElementById('username'),
+  msgElement: document.getElementById('msgElement'),
   rockets: document.getElementById('rockets'),
   rocketsIcon: document.getElementById('rocketsIcon'),
   shipsDestroyed: document.getElementById('shipsDestroyed'),
   shipsDestroyedIcon: document.getElementById('shipsDestroyedIcon'),
-  startBtn: document.getElementById('startButton'),
+  trophies: document.getElementById('trophies'),
   trophiesIcon: document.getElementById('trophiesIcon'),
-  userNameInput: document.getElementById('username'),
-  msgElement: document.getElementById('msgElement'),
+  startBtn: document.getElementById('startButton'),
+  restartBtn: document.getElementById('restart'),
+  resetScoreButton: document.getElementById('resetScoreButton'),
 };
 
 let gameState = {
@@ -46,6 +47,8 @@ const msg = {
 };
 
 let username = uiElements.userNameInput;
+let trophies = uiElements.trophies;
+let trophiesTot = parseInt(trophies.innerText);
 
 uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
@@ -87,7 +90,7 @@ function initializeGame() {
 }
 
 function playTurn() {
-  const { shiftedX, shiftedY } = getCoordinates();
+  const { shiftedX, shiftedY } = selectCoordinates();
   const shipsCoordinates = locateShips(gameState.grid, config.NUM_SHIPS);
   const closestShipDist = getClosestShipDistance(
     shiftedX,
@@ -95,20 +98,17 @@ function playTurn() {
     shipsCoordinates
   );
 
-  alert('Time to attack! Adjust your aim by entering the coordinates.');
-
   gameState.rocketsCount = useRockets(gameState.rocketsCount);
 
   updateScreen(uiElements.rockets, gameState.rocketsCount);
-
   launchRocket(shiftedX, shiftedY);
 
   const isShipDestroyed = radarFeedback(closestShipDist);
 
   if (isShipDestroyed) {
     gameState.grid = removeShip(gameState.grid, shiftedX, shiftedY);
-    gameState.shipsCount = gameState.shipsCount - 1;
-    gameState.shipsDestroyedCount = gameState.shipsDestroyedCount + 1;
+    gameState.shipsCount -= 1;
+    gameState.shipsDestroyedCount += 1;
     updateScreen(uiElements.shipsDestroyed, gameState.shipsDestroyedCount);
   }
 
@@ -155,6 +155,9 @@ function handleGameOver() {
 }
 
 function handleGameWin() {
+  trophiesTot += 1;
+  console.log(trophiesTot);
+  updateScreen(trophies, trophiesTot);
   updateScreen(uiElements.msgElement, msg.youWin);
   updateScreen(uiElements.restartBtn, 'Play Again 🔄');
   addScore(username.value);
