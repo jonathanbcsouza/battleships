@@ -17,26 +17,20 @@ Some things to note:
 * Please include guidance on how to install and execute your solution.
 * Please create a merge request when you are done.
 
-### Running the Game
+---
 
-1. Install the project dependencies:
+## Prerequisites
 
-   ```
-   npm install
-   ```
+- PHP and MySQL installed on your system.
+- Node.js and npm for running the test.
 
-2. Start the game locally:
-   ```
-   npm run dev
-   ```
-   The game will open in a new browser window.
+## Setup and Execution
 
-### Running the Tests
+1. Clone the repository to your local machine.
+2. Run `npm install` to install the dependencies.
+3. Start a local PHP server using `php -S localhost:8000`.
+4. Open your browser and navigate to `http://localhost:8000` to play the game.
 
-To run the tests, use the following command:
+## Running Tests
 
-```
-npm test
-```
-
-This will start Jest and run all tests in the project.
+Execute `npm test` to run the test suite.
