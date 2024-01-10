@@ -13,6 +13,8 @@ $env = array_reduce(
     []
 );
 
+
+
 // DB Creddentials
 $server_name = $env['SERVER_NAME'];
 $db_username = $env['USERNAME'];
@@ -42,9 +44,18 @@ $create_table = "CREATE TABLE IF NOT EXISTS $table_name (
 )";
 $conn->query($create_table);
 
-$controller = new UserController($conn);
-$controller->handleRequest();
-$trophies = $controller->getTrophies($logged_user);
 
-require_once 'controllers/UserController.php';
-require_once 'db_connection.php';
+$controller = new UserController($conn);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $controller->handleRequest();
+}
+
+$logged_user = $_SESSION['username'] ?? null;
+$trophies = null;
+
+if ($logged_user) {
+    $trophies = $controller->getTrophies($logged_user);
+}
+
+$conn->close();
