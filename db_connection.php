@@ -3,26 +3,20 @@ session_start();
 require_once 'controllers/UserController.php';
 
 // Load env variables
-$env = array_reduce(
-    explode("\n", file_get_contents('.env.local')),
-    function ($carry, $item) {
-        list($key, $value) = explode('=', $item, 2);
-        $carry[$key] = $value;
-        return $carry;
-    },
-    []
-);
+require 'vendor/autoload.php';
 
+use Dotenv\Dotenv;
 
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-// DB Creddentials
-$server_name = $env['SERVER_NAME'];
-$db_username = $env['USERNAME'];
-$password = $env['PASSWORD'];
+$server_name = $_ENV['SERVER'];
+$db_username = $_ENV['USERNAME'];
+$password = $_ENV['PASSWORD'];
 $db_name = "battleship_db";
 $table_name = "users";
 
-$logged_user = $_SESSION['username'] ?? null;
+$logged_user = isset($_SESSION['username']) ? $_SESSION['username'] : $_ENV['LOGGED_USER_TESTING'];
 
 // Create connection
 $conn = new mysqli($server_name, $db_username, $password);
@@ -44,18 +38,17 @@ $create_table = "CREATE TABLE IF NOT EXISTS $table_name (
 )";
 $conn->query($create_table);
 
-
-$controller = new UserController($conn);
+// Start session
+$userController = new UserController($conn);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $controller->handleRequest();
+    $userController->handleRequest();
 }
 
-$logged_user = $_SESSION['username'] ?? null;
 $trophies = null;
 
 if ($logged_user) {
-    $trophies = $controller->getTrophies($logged_user);
+    $trophies = $userController->getTrophies($logged_user);
 }
 
 $conn->close();
