@@ -36,6 +36,7 @@ let gameState = {
   grid: [],
   shipsCount: config.NUM_SHIPS,
   rocketsCount: config.NUM_ROCKETS,
+  trophiesCount: parseInt(uiElements.trophies.textContent),
   shipsDestroyedCount: 0,
   state: 'init',
 };
@@ -47,8 +48,6 @@ const msg = {
 };
 
 let username = uiElements.userNameInput;
-let trophies = uiElements.trophies;
-let trophiesTot = parseInt(trophies.innerText);
 
 uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
@@ -155,9 +154,7 @@ function handleGameOver() {
 }
 
 function handleGameWin() {
-  trophiesTot += 1;
-  console.log(trophiesTot);
-  updateScreen(trophies, trophiesTot);
+  updateScreen(trophies, gameState.trophiesCount + 1);
   updateScreen(uiElements.msgElement, msg.youWin);
   updateScreen(uiElements.restartBtn, 'Play Again 🔄');
   addScore(username.value);

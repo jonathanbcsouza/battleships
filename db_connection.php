@@ -39,16 +39,15 @@ $create_table = "CREATE TABLE IF NOT EXISTS $table_name (
 $conn->query($create_table);
 
 // Start session
+$trophies = 0;
 $userController = new UserController($conn);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userController->handleRequest();
+if ($_SERVER["REQUEST_METHOD"] == "GET" && $logged_user) {
+    $trophies = $userController->getTrophies($logged_user);
 }
 
-$trophies = null;
-
-if ($logged_user) {
-    $trophies = $userController->getTrophies($logged_user);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $userController->updateData($_POST['username'], $_POST['action']);
 }
 
 $conn->close();
