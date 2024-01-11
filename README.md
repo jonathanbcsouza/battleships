@@ -18,19 +18,39 @@ Some things to note:
 * Please create a merge request when you are done.
 
 ---
-
-## Prerequisites
+### Solution
+#### Prerequisites
 
 - PHP and MySQL installed on your system.
-- Node.js and npm for running the test.
+- Composer for managing PHP dependencies.
+- Node.js and npm for the javascript test.
 
-## Setup and Execution
+#### Setup and Execution
 
 1. Clone the repository to your local machine.
-2. Run `npm install` to install the dependencies.
-3. Start a local PHP server using `php -S localhost:8000`.
-4. Open your browser and navigate to `http://localhost:8000` to play the game.
+2. Install Composer if you haven't already. You can download it from [here](https://getcomposer.org/download/). After downloading, you can install it globally on your system by following the instructions [here](https://getcomposer.org/doc/00-intro.md#globally).
+3. Run `composer install` to install the PHP dependencies.
+4. Run `npm install` to install the javascript dependencies.
+5. Start a local PHP server using `php -S localhost:8000`.
+6. Open your browser and navigate to `http://localhost:8000` to play the game.
 
-## Running Tests
-
+#### Running Javascript Tests
 Execute `npm test` to run the test suite.
+
+#### Verifying Installed Libraries
+
+You can verify the installed PHP libraries using Composer:
+
+```bash
+composer show
+```
+
+This will list all the installed PHP packages along with their versions.
+
+#### Planned Enhancements
+
+- Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`.
+- Create new tests in PHP.
+- Use docker.
+- Replace javascript prompts with modals.
+- Fix bug on the first screen. The trophies counter should update once the user is changed.
