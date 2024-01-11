@@ -54,6 +54,11 @@ input:focus {
   outline: none;
 }
 
+.btn-container {
+  display: flex;
+  gap: 20px;
+}
+
 .button:hover {
   background-color: var(--button-hover-color);
 }

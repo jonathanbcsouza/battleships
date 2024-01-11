@@ -35,11 +35,13 @@
         </section>
 
         <section class="game-controls">
-            <button id="startButton" aria-label="Start game">Play</button>
-            <button id="restart" aria-label="Restart game">Restart</button>
-            <?php if ($trophies > 0) : ?>
-                <button id="resetScoreButton">Reset Score</button>
-            <?php endif; ?>
+            <div class="btn-container">
+                <button id="startButton" aria-label="Start game">Start Game</button>
+                <button id="restart" aria-label="Restart game">Restart</button>
+                <?php if ($trophies > 0) : ?>
+                    <button id="resetScoreButton">Reset Score</button>
+                <?php endif; ?>
+            </div>
         </section>
 
         <section class="game-board">
