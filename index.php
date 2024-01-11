@@ -1,4 +1,17 @@
-<?php include 'http_requests.php'; ?>
+<?php
+session_start();
+
+if (isset($_SESSION['username'])) {
+    header('Location: login.php?username=' . urlencode($_SESSION['username']));
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['username'])) {
+    $_SESSION['username'] = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    header('Location: login.php?username=' . urlencode($_SESSION['username']));
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,40 +30,11 @@
     </header>
 
     <main>
-        <input id="username" name="username" placeholder="Enter your username" value="<?php echo $logged_user; ?>">
-        <p id="msgElement"></p>
-        <section class="game-stats">
-            <div class="stat-item">
-                <span id="rocketsIcon"></span>
-                <span id="rockets"></span>
-            </div>
-            <div class="stat-item">
-                <span id="shipsDestroyedIcon"></span>
-                <span id="shipsDestroyed"></span>
-            </div>
-            <div class="stat-item">
-                <span id="trophiesIcon"></span>
-                <span id="trophies"><?php echo $trophies; ?></span>
-            </div>
-        </section>
-
-        <section class="game-controls">
-            <div class="btn-container">
-                <button id="startButton" aria-label="Start game">Start Game</button>
-                <button id="restart" aria-label="Restart game">Restart</button>
-                <?php if ($trophies > 0) : ?>
-                    <button id="resetScoreButton">Reset Score</button>
-                <?php endif; ?>
-            </div>
-        </section>
-
-        <section class="game-board">
-            <p id="board"></p>
-        </section>
-
+        <form action="index.php" method="post">
+            <input id="username" name="username" placeholder="Enter your username" required>
+            <button type="submit">Start Game</button>
+        </form>
     </main>
-
-    <script type="module" src="index.js"></script>
 </body>
 
 </html>
