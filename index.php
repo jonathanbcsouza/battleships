@@ -13,28 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['username'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php include './partials/header.php'; ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battleship Game</title>
-    <link rel="stylesheet" type="text/css" href="./styles/styles.css">
-    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
-</head>
+<main>
+    <form action="index.php" method="post">
+        <input id="username" name="username" placeholder="Enter your username" required>
+        <button type="submit">Start Game</button>
+    </form>
+</main>
 
-<body>
-    <header>
-        <h1>Battleship Game</h1>
-    </header>
-
-    <main>
-        <form action="index.php" method="post">
-            <input id="username" name="username" placeholder="Enter your username" required>
-            <button type="submit">Start Game</button>
-        </form>
-    </main>
-</body>
-
-</html>
+<?php include './partials/footer.php'; ?>

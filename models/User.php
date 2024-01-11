@@ -23,7 +23,7 @@ class User
 
     public function getTrophies($username)
     {
-        $trophies = null;
+        $trophies = 0;
         $sql = "SELECT trophies FROM users WHERE username = ?";
 
         $stmt = $this->conn->prepare($sql);

@@ -2,7 +2,6 @@
 
 include_once 'db_connection.php';
 
-$trophies = 0;
 $userController = new UserController($conn);
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && $logged_user) {

@@ -6,57 +6,42 @@ if (!isset($_SESSION['username'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php include './partials/header.php'; ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battleship Game</title>
-    <link rel="stylesheet" type="text/css" href="./styles/styles.css">
-    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
-</head>
+<main>
+    <input id="username" name="username" placeholder="Enter your username" value="<?php echo $logged_user; ?>">
+    <p id="msgElement"></p>
+    <section class="game-stats">
+        <div class="stat-item">
+            <span id="rocketsIcon"></span>
+            <span id="rockets"></span>
+        </div>
+        <div class="stat-item">
+            <span id="shipsDestroyedIcon"></span>
+            <span id="shipsDestroyed"></span>
+        </div>
+        <div class="stat-item">
+            <span id="trophiesIcon"></span>
+            <span id="trophies"><?php echo $trophies; ?></span>
+        </div>
+    </section>
 
-<body>
-    <header>
-        <h1>Battleship Game</h1>
-    </header>
+    <section class="game-controls">
+        <div class="btn-container">
+            <button id="startButton" aria-label="Start game">Start Game</button>
+            <button id="restart" aria-label="Restart game">Restart</button>
+            <?php if ($trophies > 0) : ?>
+                <button id="resetScoreButton">Reset Score</button>
+            <?php endif; ?>
+        </div>
+    </section>
 
-    <main>
-        <input id="username" name="username" placeholder="Enter your username" value="<?php echo $logged_user; ?>">
-        <p id="msgElement"></p>
-        <section class="game-stats">
-            <div class="stat-item">
-                <span id="rocketsIcon"></span>
-                <span id="rockets"></span>
-            </div>
-            <div class="stat-item">
-                <span id="shipsDestroyedIcon"></span>
-                <span id="shipsDestroyed"></span>
-            </div>
-            <div class="stat-item">
-                <span id="trophiesIcon"></span>
-                <span id="trophies"><?php echo $trophies; ?></span>
-            </div>
-        </section>
+    <section class="game-board">
+        <p id="board"></p>
+    </section>
 
-        <section class="game-controls">
-            <div class="btn-container">
-                <button id="startButton" aria-label="Start game">Start Game</button>
-                <button id="restart" aria-label="Restart game">Restart</button>
-                <?php if ($trophies > 0) : ?>
-                    <button id="resetScoreButton">Reset Score</button>
-                <?php endif; ?>
-            </div>
-        </section>
+</main>
 
-        <section class="game-board">
-            <p id="board"></p>
-        </section>
+<script type="module" src="index.js"></script>
 
-    </main>
-
-    <script type="module" src="index.js"></script>
-</body>
-
-</html>
+<?php include './partials/footer.php'; ?>
