@@ -8,33 +8,50 @@ class User
         $this->conn = $conn;
     }
 
+    private function executeStatement($sql, $username)
+    {
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("s", $username);
+            $result = $stmt->execute();
+            $stmt->close();
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
     public function getTrophies($username)
     {
-        $trophies = 0;
-        if ($stmt = $this->conn->prepare("SELECT trophies FROM users WHERE username = ?")) {
+        $trophies = null;
+        $sql = "SELECT trophies FROM users WHERE username = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt) {
             $stmt->bind_param("s", $username);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($row = $result->fetch_assoc()) {
-                $trophies = $row['trophies'];
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                if ($row = $result->fetch_assoc()) {
+                    $trophies = $row['trophies'];
+                }
             }
             $stmt->close();
+        } else {
+            return false;
         }
 
         return $trophies;
     }
 
-    public function addTrophy($username) {
+    public function addTrophy($username)
+    {
         $sql = "INSERT INTO users (username, trophies) VALUES (?, 1) ON DUPLICATE KEY UPDATE trophies = trophies + 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $username);
-        return $stmt->execute();
+        return $this->executeStatement($sql, $username);
     }
 
-    public function resetTrophies($username) {
+    public function resetTrophies($username)
+    {
         $sql = "UPDATE users SET trophies = 0 WHERE username = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $username);
-        return $stmt->execute();
+        return $this->executeStatement($sql, $username);
     }
 }

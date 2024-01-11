@@ -21,33 +21,31 @@ $logged_user = isset($_SESSION['username']) ? $_SESSION['username'] : $_ENV['LOG
 // Create connection
 $conn = new mysqli($server_name, $db_username, $password);
 
+// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  throw new Exception("Connection failed: " . $conn->connect_error);
 }
 
-// Create database if it doesn't exist
-$sql = "CREATE DATABASE IF NOT EXISTS $db_name";
-$conn->query($sql);
-$conn->select_db($db_name);
+// Setup database and table
+setupDatabaseAndTable($conn, $db_name, $table_name);
 
-// Create table if it doesn't exist
-$create_table = "CREATE TABLE IF NOT EXISTS $table_name (
-  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(30) NOT NULL UNIQUE,
-  trophies INT(6) NOT NULL
-)";
-$conn->query($create_table);
+function setupDatabaseAndTable($conn, $db_name, $table_name)
+{
+  // Create database if it doesn't exist
+  $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
+  if (!$conn->query($sql)) {
+    throw new Exception("Error creating database: " . $conn->error);
+  }
+  $conn->select_db($db_name);
 
-// Start session
-$trophies = 0;
-$userController = new UserController($conn);
+  // Create table if it doesn't exist
+  $create_table = "CREATE TABLE IF NOT EXISTS $table_name (
+      id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(30) NOT NULL UNIQUE,
+      trophies INT(6) NOT NULL
+    )";
 
-if ($_SERVER["REQUEST_METHOD"] == "GET" && $logged_user) {
-    $trophies = $userController->getTrophies($logged_user);
+  if (!$conn->query($create_table)) {
+    throw new Exception("Error creating table: " . $conn->error);
+  }
 }
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userController->updateData($_POST['username'], $_POST['action']);
-}
-
-$conn->close();

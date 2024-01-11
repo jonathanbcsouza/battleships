@@ -152,7 +152,7 @@ export function getValidCoordinates(coordinate, maxNumber) {
 // DB Operations
 function handleScore(username, action) {
   alert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
-  fetch('db_connection.php', {
+  fetch('http_requests.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -185,4 +185,12 @@ export function addScore(username) {
 
 export function resetScore(username) {
   handleScore(username, 'reset');
+}
+
+document.getElementById('username').addEventListener('input', function () {
+  updateUser(this.value);
+});
+
+function updateUser(username) {
+  console.log(username);
 }
