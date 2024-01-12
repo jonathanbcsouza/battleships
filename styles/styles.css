@@ -65,10 +65,13 @@ input:focus {
   padding: 1em;
 }
 
-#username-display p {
-  margin: 0;
+#username-display input {
+  padding: 0;
   color: var(--text-color);
   font-size: 1em;
+  background: none;
+  border: none;
+  outline: none;
 }
 
 .btn-container {

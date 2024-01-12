@@ -45,6 +45,8 @@ class User
 
     public function addTrophy($username)
     {
+        var_dump('from Model');
+        var_dump($username);
         $sql = "INSERT INTO users (username, trophies) VALUES (?, 1) ON DUPLICATE KEY UPDATE trophies = trophies + 1";
         return $this->executeStatement($sql, $username);
     }

@@ -9,7 +9,7 @@ if (!isset($_SESSION['username'])) {
 <?php include './partials/header.php'; ?>
 
     <div id="username-display">
-        <p id="username" name="username">user: <?php echo $logged_user; ?></p>
+        <span>user: <input type="text" id="username" name="username" value="<?php echo $logged_user; ?>" readonly></span>
     </div>
     <p id="msgElement"></p>
     <section class="game-stats">

@@ -85,7 +85,6 @@ function initializeGame() {
   if (uiElements.resetScoreButton) {
     uiElements.resetScoreButton.style.display = 'none';
   }
-  uiElements.userNameInput.style.display = 'none';
 }
 
 function playTurn() {

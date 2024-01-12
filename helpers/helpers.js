@@ -186,11 +186,3 @@ export function addScore(username) {
 export function resetScore(username) {
   handleScore(username, 'reset');
 }
-
-document.getElementById('username').addEventListener('input', function () {
-  updateUser(this.value);
-});
-
-function updateUser(username) {
-  console.log(username);
-}
