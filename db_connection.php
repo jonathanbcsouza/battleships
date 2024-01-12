@@ -16,7 +16,9 @@ $password = $_ENV['PASSWORD'];
 $db_name = "battleship_db";
 $table_name = "users";
 
-$logged_user = isset($_SESSION['username']) ? $_SESSION['username'] : $_ENV['LOGGED_USER_TESTING'];
+if (isset($_SESSION['username'])) {
+  $logged_user = $_SESSION['username'];
+}
 
 // Create connection
 $conn = new mysqli($server_name, $db_username, $password);

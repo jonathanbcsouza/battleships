@@ -54,6 +54,23 @@ input:focus {
   outline: none;
 }
 
+#username-display {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: var(--background-color);
+  padding: 1em;
+}
+
+#username-display p {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 1em;
+}
+
 .btn-container {
   display: flex;
   gap: 20px;

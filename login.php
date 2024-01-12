@@ -8,8 +8,9 @@ if (!isset($_SESSION['username'])) {
 
 <?php include './partials/header.php'; ?>
 
-<main>
-    <input id="username" name="username" placeholder="Enter your username" value="<?php echo $logged_user; ?>">
+    <div id="username-display">
+        <p id="username" name="username">user: <?php echo $logged_user; ?></p>
+    </div>
     <p id="msgElement"></p>
     <section class="game-stats">
         <div class="stat-item">
