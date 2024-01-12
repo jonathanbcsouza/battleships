@@ -2,6 +2,8 @@
 
 include_once 'db_connection.php';
 
+use App\Controllers\UserController;
+
 $userController = new UserController($conn);
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && $logged_user) {

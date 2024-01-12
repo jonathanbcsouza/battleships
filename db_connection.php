@@ -1,6 +1,5 @@
 <?php
 session_start();
-require_once 'controllers/UserController.php';
 
 // Load env variables
 require 'vendor/autoload.php';

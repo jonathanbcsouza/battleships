@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['username'])) {
 }
 ?>
 
-<?php include './src/views/partials/header.php'; ?>
+<?php include './views/partials/header.php'; ?>
 
 <main>
     <form action="./index.php" method="post">
@@ -17,4 +17,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['username'])) {
     </form>
 </main>
 
-<?php include './src/views/partials/footer.php'; ?>
+<?php include './views/partials/footer.php'; ?>

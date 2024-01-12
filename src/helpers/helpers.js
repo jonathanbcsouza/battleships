@@ -152,7 +152,7 @@ export function getValidCoordinates(coordinate, maxNumber) {
 // DB Operations
 function handleScore(username, action) {
   alert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
-  fetch('http_requests.php', {
+  fetch('../../http_requests.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
