@@ -1,14 +1,12 @@
-<?php include '../../http_requests.php';
+<?php include '../../http_requests.php'; ?>
 
-if (!isset($_SESSION['username'])) {
-    header('Location: ../index.php');
-    exit();
-}
-
-include './partials/header.php'; ?>
+<?php include './partials/header.php'; ?>
 
 <div id="username-display">
     <span>user: <input type="text" id="username" name="username" value="<?php echo $logged_user; ?>" readonly></span>
+    <form action="login.php" method="post">
+        <button type="submit" name="logout">Log out</button>
+    </form>
 </div>
 <p id="msgElement"></p>
 

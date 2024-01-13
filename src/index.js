@@ -139,7 +139,7 @@ function handleGameContinue() {
       `<br>` +
       `You have ${gameState.rocketsCount} rockets left and ${gameState.shipsCount} opponent ships remaining. Keep it Up!`
   );
-  updateScreen(uiElements.startBtn, 'Continue Game ➡️');
+  updateScreen(uiElements.startBtn, 'Continue ➡️');
   updateScreen(uiElements.restartBtn, 'Restart 🔄');
   uiElements.startBtn.style.display = 'block';
   uiElements.restartBtn.style.display = 'block';

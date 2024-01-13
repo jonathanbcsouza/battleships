@@ -68,10 +68,13 @@ export function locateShips(grid, numShips) {
 }
 
 export function getClosestShipDistance(shiftedX, shiftedY, shipsCoordinates) {
+
+  console.log(shiftedX, shiftedY, shipsCoordinates);
   const distances = shipsCoordinates.map(
     ([x, y]) => Math.abs(shiftedX - x) + Math.abs(shiftedY - y)
   );
 
+  console.log(...distances);
   return Math.min(...distances);
 }
 
