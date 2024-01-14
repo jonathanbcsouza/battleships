@@ -50,8 +50,9 @@ This will list all the installed PHP packages along with their versions.
 #### Planned Enhancements
 
 - ~~Fix bug on the first screen. The trophies counter should update once the user is changed.~~ ✅ - Login page using query strings created.
-- Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`.
-- Create new tests in PHP.
+- ~~Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`~~. ✅ Grid class created.
+- Replace javascript constants.
+- Replace js tests with PHP.
 - Declare data types.
 - Replace javascript prompts with modals.
 - Use docker.
