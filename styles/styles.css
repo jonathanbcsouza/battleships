@@ -1,52 +1,51 @@
 :root {
+  --base-font-size: 1rem;
+  --button-bg-color: #444;
+  --button-hover-color: #555;
+  --input-focus-color: #007bff;
   --main-bg-color: #282c34;
   --main-text-color: #ffffff;
-  --button-bg-color: #4e5052;
-  --button-hover-color: #777;
-  --input-focus-color: #007bff;
-  --base-font-size: 1rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
+  display: flex;
+  justify-content: center;
   align-items: center;
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
-  display: flex;
-  flex-direction: column;
   font-family: Arial, sans-serif;
-  justify-content: center;
-  margin: 0 auto;
-  min-height: 70vh;
-  text-align: center;
-  width: 50%;
+  line-height: 1.6;
 }
 
-button {
-  background-color: var(--button-bg-color);
-  border: none;
-  color: var(--main-text-color);
-  cursor: pointer;
-  font-size: var(--base-font-size);
-  margin: 0.25rem 0.125rem;
-  padding: 0.625rem 1.25rem;
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 10px;
+}
+
+nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
 }
 
 input {
   padding: 10px;
-  font-size: 16px;
+  margin: 5px 0;
   border: 1px solid var(--button-bg-color);
   border-radius: 4px;
-  margin: 5px 0;
-  width: 40%;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
   text-align: center;
-}
-
-input::placeholder {
-  font-size: calc(var(--base-font-size) * 0.9);
+  transition: border-color 0.3s ease;
 }
 
 input:focus {
@@ -54,45 +53,68 @@ input:focus {
   outline: none;
 }
 
-#username-display {
+button {
+  padding: 1rem 1.25rem;
+  margin: 0.25rem 0.125rem;
+  border: none;
+  border-radius: 3px;
+  background-color: var(--button-bg-color);
+  color: var(--main-text-color);
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.user-info {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  position: fixed;
-  top: 0;
-  right: 0;
-  background-color: var(--background-color);
-  padding: 1em;
+  gap: 10px;
 }
 
-#username-display input {
-  padding: 0;
-  color: var(--text-color);
-  font-size: 1em;
-  background: none;
-  border: none;
-  outline: none;
+.login-form {
+  margin-top: 20vh;
 }
 
-.btn-container {
+.login-form form {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
 }
 
-.button:hover {
-  background-color: var(--button-hover-color);
+.msgContainer {
+  max-width: 40vw;
+  padding: 20px;
+  text-align: justify;
+}
+
+.game-start-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.game-msgs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .game-stats {
   display: flex;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
   margin-bottom: 1rem;
 }
 
-.game-controls,
-.game-board {
-  align-items: center;
+.game-stats span {
+  font-size: 1.2rem;
+}
+
+.btn-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 }

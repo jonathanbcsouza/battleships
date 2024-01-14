@@ -18,9 +18,16 @@ import {
   useRockets,
 } from './helpers/helpers.js';
 
+import {
+  displayWelcomeMessage,
+  displayYouWinMessage,
+  displayGameOverMessage,
+  displayContinueMessage,
+} from './helpers/messages.js';
+
 const uiElements = {
   userNameInput: document.getElementById('username'),
-  msgElement: document.getElementById('msgElement'),
+  msgContainer: document.getElementById('msgContainer'),
   rockets: document.getElementById('rockets'),
   rocketsIcon: document.getElementById('rocketsIcon'),
   shipsDestroyed: document.getElementById('shipsDestroyed'),
@@ -32,6 +39,9 @@ const uiElements = {
   resetScoreButton: document.getElementById('resetScoreButton'),
 };
 
+let username = uiElements.userNameInput;
+let userValue = username.dataset.user;
+
 let gameState = {
   grid: [],
   shipsCount: config.NUM_SHIPS,
@@ -41,25 +51,21 @@ let gameState = {
   state: 'init',
 };
 
-const msg = {
-  welcome: `Welcome aboard. You are in the middle of a war and your mission is to destroy the remaining ${config.NUM_SHIPS} opponent ships! You have ${config.NUM_ROCKETS} rockets left. You can use the rockets to attack the ships. <br>Good luck!`,
-  youWin: `Congratulations, You Win! 🎉`,
-  gameOver: `Game Over! You Lose! 😭`,
-};
-
-let username = uiElements.userNameInput;
-
 uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
 uiElements.restartBtn.addEventListener('click', resetGame);
 
 if (uiElements.resetScoreButton) {
   uiElements.resetScoreButton.addEventListener('click', () => {
-    resetScore(username.value);
+    resetScore(userValue);
   });
 }
 
-updateScreen(uiElements.msgElement, msg.welcome);
+updateScreen(
+  uiElements.msgContainer,
+  displayWelcomeMessage(userValue, gameState.shipsCount, gameState.rocketsCount)
+);
+
 updateScreen(uiElements.rockets, config.NUM_ROCKETS);
 updateScreen(uiElements.shipsDestroyed, 0);
 updateScreen(uiElements.rocketsIcon, config.ROCKET_ICON);
@@ -133,12 +139,7 @@ function handleGameState() {
 }
 
 function handleGameContinue() {
-  updateScreen(
-    uiElements.msgElement,
-    `🎙️ Roger!` +
-      `<br>` +
-      `You have ${gameState.rocketsCount} rockets left and ${gameState.shipsCount} opponent ships remaining. Keep it Up!`
-  );
+  updateScreen(uiElements.msgContainer, displayContinueMessage(userValue, gameState.rocketsCount, gameState.shipsCount));
   updateScreen(uiElements.startBtn, 'Continue ➡️');
   updateScreen(uiElements.restartBtn, 'Restart 🔄');
   uiElements.startBtn.style.display = 'block';
@@ -146,7 +147,7 @@ function handleGameContinue() {
 }
 
 function handleGameOver() {
-  updateScreen(uiElements.msgElement, msg.gameOver);
+  updateScreen(uiElements.msgContainer, displayGameOverMessage());
   updateScreen(uiElements.restartBtn, 'Try Again 🔄');
   revealGrid(gameState.grid);
   uiElements.startBtn.style.display = 'none';
@@ -154,9 +155,9 @@ function handleGameOver() {
 
 function handleGameWin() {
   updateScreen(trophies, gameState.trophiesCount + 1);
-  updateScreen(uiElements.msgElement, msg.youWin);
+  updateScreen(uiElements.msgContainer, displayYouWinMessage());
   updateScreen(uiElements.restartBtn, 'Play Again 🔄');
-  addScore(username.value);
+  addScore(userValue);
   revealGrid(gameState.grid);
   uiElements.startBtn.style.display = 'none';
   uiElements.restartBtn.style.display = 'block';

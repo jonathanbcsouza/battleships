@@ -10,6 +10,19 @@
 </head>
 
 <body>
-    <header>
-        <h1>Battleship Game</h1>
-    </header>
+    <?php if (isset($logged_user)) : ?>
+        <header>
+            <nav>
+                <div class="user-info">
+                    <span id="username" data-user="<?php echo htmlspecialchars($logged_user); ?>">
+                        user: <?php echo htmlspecialchars($logged_user); ?>
+                    </span>
+                    <form action="login.php" method="post">
+                        <button type="submit" name="logout">
+                            Log out
+                        </button>
+                    </form>
+                </div>
+            </nav>
+        </header>
+    <?php endif; ?>
