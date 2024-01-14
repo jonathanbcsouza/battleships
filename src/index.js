@@ -2,11 +2,10 @@ import * as config from './configs/constants.js';
 
 import {
   addScore,
-  buildGrid,
   getClosestShipDistance,
+  getGrid,
   launchRocket,
   locateShips,
-  placeShips,
   radarFeedback,
   removeShip,
   resetGame,
@@ -82,10 +81,11 @@ function playGame() {
   }
 }
 
-function initializeGame() {
+async function initializeGame() {
   gameState.state = 'playing';
-  gameState.grid = buildGrid(config.GRID_SIZE);
-  placeShips(gameState.grid, config.GRID_SIZE, config.NUM_SHIPS);
+
+  gameState.grid = await getGrid();
+
   console.table(gameState.grid);
 
   if (uiElements.resetScoreButton) {
@@ -139,7 +139,14 @@ function handleGameState() {
 }
 
 function handleGameContinue() {
-  updateScreen(uiElements.msgContainer, displayContinueMessage(userValue, gameState.rocketsCount, gameState.shipsCount));
+  updateScreen(
+    uiElements.msgContainer,
+    displayContinueMessage(
+      userValue,
+      gameState.rocketsCount,
+      gameState.shipsCount
+    )
+  );
   updateScreen(uiElements.startBtn, 'Continue ➡️');
   updateScreen(uiElements.restartBtn, 'Restart 🔄');
   uiElements.startBtn.style.display = 'block';

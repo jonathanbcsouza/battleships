@@ -1,31 +1,30 @@
 import * as config from '../configs/constants.js';
 
 // Grid management
-export function buildGrid(size) {
-  let columns = [];
+export async function getGrid() {
+  try {
+    const response = await fetch('../helpers/createGrid.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        size: config.GRID_SIZE,
+        numShips: config.NUM_SHIPS,
+      }),
+    });
 
-  for (let i = 0; i < size; i++) {
-    let rows = [];
-    for (let j = 0; j < size; j++) {
-      rows.push(config.EMPTY_ICON);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    columns.push(rows);
-  }
 
-  return columns;
-}
+    const grid = await response.json();
 
-export function placeShips(grid, gridSize, numShips) {
-  let shipsPlaced = 0;
-
-  while (shipsPlaced < numShips) {
-    const randomRow = Math.floor(Math.random() * gridSize);
-    const randomCol = Math.floor(Math.random() * gridSize);
-
-    if (grid[randomRow][randomCol] == config.EMPTY_ICON) {
-      grid[randomRow][randomCol] = config.SHIP_ICON;
-      shipsPlaced++;
-    }
+    return grid;
+  } catch (error) {
+    console.log(
+      'There was a problem with the fetch operation: ' + error.message
+    );
   }
 }
 
@@ -68,13 +67,11 @@ export function locateShips(grid, numShips) {
 }
 
 export function getClosestShipDistance(shiftedX, shiftedY, shipsCoordinates) {
-
-  console.log(shiftedX, shiftedY, shipsCoordinates);
   const distances = shipsCoordinates.map(
     ([x, y]) => Math.abs(shiftedX - x) + Math.abs(shiftedY - y)
   );
 
-  console.log(...distances);
+  // console.log(...distances);
   return Math.min(...distances);
 }
 

@@ -48,6 +48,10 @@ input {
   transition: border-color 0.3s ease;
 }
 
+input::placeholder {
+  font-size: medium;
+}
+
 input:focus {
   border-color: var(--input-focus-color);
   outline: none;
