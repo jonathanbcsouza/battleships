@@ -1,13 +1,15 @@
 import * as config from './configs/constants.js';
-import { getGrid, addScore, resetScore } from './helpers/httpRequests.js';
 
 import {
+  addScore,
   getClosestShipDistance,
+  getGrid,
   launchRocket,
   locateShips,
   radarFeedback,
   removeShip,
   resetGame,
+  resetScore,
   revealGrid,
   selectCoordinates,
   setGameState,
