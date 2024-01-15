@@ -1,66 +1,51 @@
 import * as config from '../configs/constants.js';
 
-// Grid management
-export async function getGrid() {
-  try {
-    const response = await fetch('../helpers/createGrid.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        size: config.GRID_SIZE,
-        numShips: config.NUM_SHIPS,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const grid = await response.json();
-
-    return grid;
-  } catch (error) {
-    console.log(
-      'There was a problem with the fetch operation: ' + error.message
-    );
-  }
-}
-
-function handleScore(username, action) {
-  alert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
-  fetch('../../http_requests.php', {
-    method: 'POST',
+async function fetchData(url, method, body) {
+  const response = await fetch(url, {
+    method: method,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: new URLSearchParams({
-      username: username,
-      action: action,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.text();
-    })
-    .then((data) => {
-      console.log(data);
-      if (action === 'reset') {
-        location.reload();
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+    body: new URLSearchParams(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response;
 }
 
-export function addScore(username) {
-  handleScore(username, 'add');
+export async function getGrid() {
+  const response = await fetchData('../helpers/createGrid.php', 'POST', {
+    size: config.GRID_SIZE,
+    numShips: config.NUM_SHIPS,
+  });
+
+  return response.json();
 }
 
-export function resetScore(username) {
-  handleScore(username, 'reset');
+async function handleScore(username, action) {
+  const response = await fetchData('../../http_requests.php', 'POST', {
+    username: username,
+    action: action,
+  });
+
+  const data = await response.text();
+
+  alert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
+
+  return action === 'reset';
+}
+
+export async function addScore(username) {
+  await handleScore(username, 'add');
+}
+
+export async function resetScore(username) {
+  const shouldReload = await handleScore(username, 'reset');
+
+  if (shouldReload) {
+    location.reload();
+  }
 }
