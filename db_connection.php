@@ -27,10 +27,9 @@ if ($conn->connect_error) {
   throw new Exception("Connection failed: " . $conn->connect_error);
 }
 
-// Setup database and table
-setupDatabaseAndTable($conn, $db_name, $table_name);
+bootstrapDbTableAndUser($conn, $db_name, $table_name, $logged_user);
 
-function setupDatabaseAndTable($conn, $db_name, $table_name)
+function bootstrapDbTableAndUser($conn, $db_name, $table_name, $logged_user)
 {
   // Create database if it doesn't exist
   $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
@@ -48,5 +47,25 @@ function setupDatabaseAndTable($conn, $db_name, $table_name)
 
   if (!$conn->query($create_table)) {
     throw new Exception("Error creating table: " . $conn->error);
+  }
+
+  // Create user if not exists
+  if (isset($logged_user)) {
+    $stmt = $conn->prepare("SELECT id FROM $table_name WHERE username = ?");
+    $stmt->bind_param("s", $logged_user);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+      $stmt = $conn->prepare("INSERT INTO $table_name (username, trophies) VALUES (?, 0)");
+      $stmt->bind_param("s", $logged_user);
+      $result = $stmt->execute();
+
+      if (!$result) {
+        throw new Exception("Error creating user: " . $conn->error);
+      }
+    }
+
+    $stmt->close();
   }
 }
