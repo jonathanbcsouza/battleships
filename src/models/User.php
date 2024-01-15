@@ -11,6 +11,26 @@ class User
         $this->conn = $conn;
     }
 
+    public function createNewUser($username)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            $stmt = $this->conn->prepare("INSERT INTO users (username, trophies) VALUES (?, 0)");
+            $stmt->bind_param("s", $username);
+            $result = $stmt->execute();
+
+            if (!$result) {
+                throw new \Exception("Error creating user: " . $this->conn->error);
+            }
+        }
+
+        $stmt->close();
+    }
+
     private function executeStatement($sql, $username)
     {
         $stmt = $this->conn->prepare($sql);

@@ -4,7 +4,8 @@ include_once 'db_connection.php';
 
 use App\Controllers\UserController;
 
-$userController = new UserController($conn);
+$userController = new UserController($conn, $db_name);
+
 $trophies = 0;
 
 if ($_SERVER["REQUEST_METHOD"] === 'GET' && $logged_user) {
