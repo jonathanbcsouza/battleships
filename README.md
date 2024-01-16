@@ -51,14 +51,35 @@ composer show
 
 This will list all the installed PHP packages along with their versions.
 
+#### Database Schema
+
+The database `battleship_db` consists of the following tables:
+
+`user_configs`
+
+| Column Name    | Data Type    | Constraints                                    |
+| -------------- | ------------ | ---------------------------------------------- |
+| `id`           | int unsigned | NOT NULL, AUTO_INCREMENT, PRIMARY KEY          |
+| `user_id`      | int unsigned | NOT NULL, FOREIGN KEY REFERENCES `users`(`id`) |
+| `config_name`  | varchar(30)  | NOT NULL                                       |
+| `config_value` | varchar(30)  | NOT NULL                                       |
+
+`users`
+
+| Column Name | Data Type    | Constraints                           |
+| ----------- | ------------ | ------------------------------------- |
+| `id`        | int unsigned | NOT NULL, AUTO_INCREMENT, PRIMARY KEY |
+| `username`  | varchar(30)  | NOT NULL, UNIQUE                      |
+| `trophies`  | int          | NOT NULL                              |
+
 #### Planned Enhancements
 
-- ~~Fix bug on the first screen. The trophies counter should update once the user is changed.~~ 
-✅ - Login page using query strings created.
-- ~~Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`~~. 
-✅ Grid class created.
-- ~~Replace javascript constants~~. 
-✅ Implemented user configurations table, adaptable for future setup menu.
+- ~~Fix bug on the first screen. The trophies counter should update once the user is changed.~~
+  ✅ - Login page using query strings created.
+- ~~Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`~~.
+  ✅ Grid class created.
+- ~~Replace javascript constants~~.
+  ✅ Implemented user configurations table, adaptable for future setup menu.
 - Replace js tests with PHP.
 - Declare data types.
 - Replace javascript prompts with modals.
