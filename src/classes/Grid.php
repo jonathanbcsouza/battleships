@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Classes;
 require_once __DIR__ . '/../configs/constants.php';
 
 class Grid
