@@ -26,7 +26,7 @@ export function locateShips(grid, numShips) {
   let shipsLocation = [];
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
-      if (grid[i][j] == config.SHIP_ICON) {
+      if (grid[i][j] == userDefinedConfigs.SHIP_ICON) {
         shipsLocation.push([i, j]);
         if (shipsLocation.length === numShips) {
           return shipsLocation;
