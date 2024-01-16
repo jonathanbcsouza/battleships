@@ -25,9 +25,9 @@ export async function getGrid() {
   return response.json();
 }
 
-async function handleScore(username, action) {
+async function handleScore(user_id, action) {
   const response = await fetchData('../../http_requests.php', 'POST', {
-    username: username,
+    user_id: user_id,
     action: action,
   });
 
@@ -38,12 +38,12 @@ async function handleScore(username, action) {
   return action === 'reset';
 }
 
-export async function addScore(username) {
-  await handleScore(username, 'add');
+export async function addScore(user_id) {
+  await handleScore(user_id, 'add');
 }
 
-export async function resetScore(username) {
-  const shouldReload = await handleScore(username, 'reset');
+export async function resetScore(user_id) {
+  const shouldReload = await handleScore(user_id, 'reset');
 
   if (shouldReload) {
     location.reload();

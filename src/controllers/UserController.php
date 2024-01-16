@@ -21,26 +21,27 @@ class UserController
     public function createNewUser($username)
     {
         $username_cleaned = $this->conn->real_escape_string($username);
-        $this->model->createNewUser($username_cleaned);
+        return $this->model->createNewUser($username_cleaned);
     }
 
-    public function getTrophies($username)
+    public function getUserNameById($userId)
     {
-        return $this->model->getTrophies($username);
+        return $this->model->getUserNameById($userId);
     }
 
-    public function updateData($username, $action)
+    public function getTrophies($userId)
     {
-        $_SESSION['username'] = $username;
+        return $this->model->getTrophies($userId);
+    }
 
-        $this->validateInput($username, $action);
-
-        $username_cleaned = $this->conn->real_escape_string($username);
+    public function updateData($userId, $action)
+    {
+        $this->validateInput($userId, $action);
 
         if ($action === 'add') {
-            $result = $this->model->addTrophy($username_cleaned);
+            $result = $this->model->addTrophy($userId);
         } else if ($action === 'reset') {
-            $result = $this->model->resetTrophies($username_cleaned);
+            $result = $this->model->resetTrophies($userId);
         } else {
             throw new InvalidArgumentException("Invalid action.");
         }
@@ -49,13 +50,13 @@ class UserController
             throw new RuntimeException("Error updating data: " . $this->conn->error);
         }
 
-        return "Data updated successfully. Username: " . $username;
+        return "Data updated successfully. User id: " . $userId;
     }
 
-    private function validateInput($username, $action)
+    private function validateInput($userId, $action)
     {
-        if (empty($username) || empty($action)) {
-            throw new InvalidArgumentException("Username and action are required.");
+        if (empty($userId) || empty($action)) {
+            throw new InvalidArgumentException("User ID and action are required.");
         }
     }
 }

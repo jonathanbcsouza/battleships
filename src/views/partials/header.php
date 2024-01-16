@@ -10,12 +10,12 @@
 </head>
 
 <body>
-    <?php if (isset($logged_user)) : ?>
+    <?php if (isset($logged_user_id)) : ?>
         <header>
             <nav>
                 <div class="user-info">
-                    <span id="username" data-user="<?php echo htmlspecialchars($logged_user); ?>">
-                        user: <?php echo htmlspecialchars($logged_user); ?>
+                    <span id="username" data-id="<?php echo $logged_user_id; ?>" data-user="<?php echo $logged_user_name; ?>">
+                        user: <?php echo $logged_user_name; ?>
                     </span>
                     <form action="login.php" method="post">
                         <button type="submit" name="logout">

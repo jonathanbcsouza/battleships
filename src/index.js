@@ -37,7 +37,9 @@ const uiElements = {
 };
 
 let username = uiElements.userNameInput;
-let userValue = username.dataset.user;
+
+let userIdValue = username.dataset.id;
+let userNameValue = username.dataset.user;
 
 let gameState = {
   grid: [],
@@ -54,13 +56,13 @@ uiElements.restartBtn.addEventListener('click', resetGame);
 
 if (uiElements.resetScoreButton) {
   uiElements.resetScoreButton.addEventListener('click', () => {
-    resetScore(userValue);
+    resetScore(userIdValue);
   });
 }
 
 updateScreen(
   uiElements.msgContainer,
-  displayWelcomeMessage(userValue, gameState.shipsCount, gameState.rocketsCount)
+  displayWelcomeMessage(userNameValue, gameState.shipsCount, gameState.rocketsCount)
 );
 
 updateScreen(uiElements.rockets, config.NUM_ROCKETS);
@@ -140,7 +142,7 @@ function handleGameContinue() {
   updateScreen(
     uiElements.msgContainer,
     displayContinueMessage(
-      userValue,
+      userNameValue,
       gameState.rocketsCount,
       gameState.shipsCount
     )
@@ -162,7 +164,7 @@ function handleGameWin() {
   updateScreen(trophies, gameState.trophiesCount + 1);
   updateScreen(uiElements.msgContainer, displayYouWinMessage());
   updateScreen(uiElements.restartBtn, 'Play Again 🔄');
-  addScore(userValue);
+  addScore(userIdValue);
   revealGrid(gameState.grid);
   uiElements.startBtn.style.display = 'none';
   uiElements.restartBtn.style.display = 'block';

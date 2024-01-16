@@ -8,14 +8,25 @@ $userController = new UserController($conn, $db_name);
 
 $trophies = 0;
 
-if ($_SERVER["REQUEST_METHOD"] === 'GET' && $logged_user) {
-    $trophies = $userController->getTrophies($logged_user);
+if (isset($_SESSION['user_id'])) {
+    $logged_user_id = $_SESSION['user_id'];
+    $logged_user_name = $_SESSION['user_name'];
+}
+
+if ($_SERVER["REQUEST_METHOD"] === 'GET' && $logged_user_id) {
+    $trophies = $userController->getTrophies($logged_user_id);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST['username']) && !isset($_POST['action'])) {
-        $_SESSION['username'] = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        header('Location: src/views/login.php?username=' . urlencode($_SESSION['username']));
+    if (!empty($_POST['username_login_screen']) && !isset($_SESSION['user_id'])) {
+
+        $sanitizedUserName = filter_var($_POST['username_login_screen'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $userId = $userController->createNewUser($sanitizedUserName);
+        $username = $userController->getUserNameById($userId);
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['user_name'] = $sanitizedUserName;
+
+        header('Location: src/views/login.php?username=' . urlencode($sanitizedUserName));
         exit();
     }
 
@@ -27,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['action'])) {
-        $userController->updateData($_POST['username'], $_POST['action']);
+        $userController->updateData($_POST['user_id'], $_POST['action']);
     }
 }
 
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_id'])) {
     redirectToIndex();
 }
 

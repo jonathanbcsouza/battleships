@@ -26,16 +26,38 @@ class User
             if (!$result) {
                 throw new \Exception("Error creating user: " . $this->conn->error);
             }
+
+            $userId = $this->conn->insert_id;
+        } else {
+            $row = $result->fetch_assoc();
+            $userId = $row['id'];
         }
 
         $stmt->close();
+
+        return $userId;
     }
 
-    private function executeStatement($sql, $username)
+    public function getUserNameById($userId)
+    {
+        $stmt = $this->conn->prepare("SELECT username FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row['username'];
+        }
+
+        return null;
+    }
+
+    private function executeStatement($sql, $userId)
     {
         $stmt = $this->conn->prepare($sql);
         if ($stmt) {
-            $stmt->bind_param("s", $username);
+            $stmt->bind_param("s", $userId);
             $result = $stmt->execute();
             $stmt->close();
             return $result;
@@ -44,14 +66,14 @@ class User
         }
     }
 
-    public function getTrophies($username)
+    public function getTrophies($userId)
     {
         $trophies = 0;
-        $sql = "SELECT trophies FROM users WHERE username = ?";
+        $sql = "SELECT trophies FROM users WHERE id = ?";
 
         $stmt = $this->conn->prepare($sql);
         if ($stmt) {
-            $stmt->bind_param("s", $username);
+            $stmt->bind_param("s", $userId);
             if ($stmt->execute()) {
                 $result = $stmt->get_result();
                 if ($row = $result->fetch_assoc()) {
@@ -66,17 +88,15 @@ class User
         return $trophies;
     }
 
-    public function addTrophy($username)
+    public function addTrophy($userId)
     {
-        var_dump('from Model');
-        var_dump($username);
-        $sql = "INSERT INTO users (username, trophies) VALUES (?, 1) ON DUPLICATE KEY UPDATE trophies = trophies + 1";
-        return $this->executeStatement($sql, $username);
+        $sql = "UPDATE users SET trophies = trophies + 1 WHERE id = ?";
+        return $this->executeStatement($sql, $userId);
     }
 
-    public function resetTrophies($username)
+    public function resetTrophies($userId)
     {
-        $sql = "UPDATE users SET trophies = 0 WHERE username = ?";
-        return $this->executeStatement($sql, $username);
+        $sql = "UPDATE users SET trophies = 0 WHERE id = ?";
+        return $this->executeStatement($sql, $userId);
     }
 }
