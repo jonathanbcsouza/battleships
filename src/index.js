@@ -1,4 +1,4 @@
-import * as config from './configs/constants.js';
+import { userDefinedConfigs } from './helpers/phpSessions.js';
 import { getGrid, addScore, resetScore } from './helpers/http_requests.js';
 
 import {
@@ -37,14 +37,13 @@ const uiElements = {
 };
 
 let username = uiElements.userNameInput;
-
 let userIdValue = username.dataset.id;
 let userNameValue = username.dataset.user;
 
 let gameState = {
   grid: [],
-  shipsCount: config.NUM_SHIPS,
-  rocketsCount: config.NUM_ROCKETS,
+  shipsCount: userDefinedConfigs.NUM_SHIPS,
+  rocketsCount: userDefinedConfigs.NUM_ROCKETS,
   trophiesCount: parseInt(uiElements.trophies.textContent),
   shipsDestroyedCount: 0,
   state: 'init',
@@ -62,14 +61,18 @@ if (uiElements.resetScoreButton) {
 
 updateScreen(
   uiElements.msgContainer,
-  displayWelcomeMessage(userNameValue, gameState.shipsCount, gameState.rocketsCount)
+  displayWelcomeMessage(
+    userNameValue,
+    gameState.shipsCount,
+    gameState.rocketsCount
+  )
 );
 
-updateScreen(uiElements.rockets, config.NUM_ROCKETS);
+updateScreen(uiElements.rockets, userDefinedConfigs.NUM_ROCKETS);
 updateScreen(uiElements.shipsDestroyed, 0);
-updateScreen(uiElements.rocketsIcon, config.ROCKET_ICON);
-updateScreen(uiElements.shipsDestroyedIcon, config.EXPLOSION_ICON);
-updateScreen(uiElements.trophiesIcon, config.TROPHIE_ICON);
+updateScreen(uiElements.rocketsIcon, userDefinedConfigs.ROCKET_ICON);
+updateScreen(uiElements.shipsDestroyedIcon, userDefinedConfigs.EXPLOSION_ICON);
+updateScreen(uiElements.trophiesIcon, userDefinedConfigs.TROPHIE_ICON);
 
 function playGame() {
   if (gameState.state === 'init') {
@@ -95,7 +98,11 @@ async function initializeGame() {
 
 function playTurn() {
   const { shiftedX, shiftedY } = selectCoordinates();
-  const shipsCoordinates = locateShips(gameState.grid, config.NUM_SHIPS);
+  const shipsCoordinates = locateShips(
+    gameState.grid,
+    userDefinedConfigs.NUM_SHIPS
+  );
+
   const closestShipDist = getClosestShipDistance(
     shiftedX,
     shiftedY,

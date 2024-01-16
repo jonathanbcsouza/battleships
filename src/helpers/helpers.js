@@ -1,7 +1,7 @@
-import * as config from '../configs/constants.js';
+import { userDefinedConfigs } from './phpSessions.js';
 
 export function removeShip(grid, x, y) {
-  grid[x][y] = config.EXPLOSION_ICON;
+  grid[x][y] = userDefinedConfigs.EXPLOSION_ICON;
   return grid;
 }
 
@@ -26,7 +26,7 @@ export function locateShips(grid, numShips) {
   let shipsLocation = [];
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
-      if (grid[i][j] === config.SHIP_ICON) {
+      if (grid[i][j] == config.SHIP_ICON) {
         shipsLocation.push([i, j]);
         if (shipsLocation.length === numShips) {
           return shipsLocation;
@@ -79,17 +79,18 @@ export function launchRocket(x, y) {
 export function radarFeedback(d) {
   let message = 'HOT';
 
-  if (d === config.HIT_DIST) {
+  if (d == userDefinedConfigs.HIT_DIST) {
     message = 'HIT!\nBOOM!';
-  } else if (d >= config.COLD_DIST) {
+  } else if (d >= userDefinedConfigs.COLD_DIST) {
     message = 'COLD';
-  } else if (d >= config.WARM_DIST) {
+  } else if (d >= userDefinedConfigs.WARM_DIST) {
     message = 'WARM';
   }
 
   alert(message);
 
-  return d === config.HIT_DIST;
+  console.log(message);
+  return d === parseInt(userDefinedConfigs.HIT_DIST);
 }
 
 export function updateScreen(element, value) {
@@ -98,8 +99,8 @@ export function updateScreen(element, value) {
 
 export function selectCoordinates() {
   alert('Time to attack! Adjust your aim by entering the coordinates.');
-  const coordinateX = getValidCoordinates('X', config.GRID_SIZE);
-  const coordinateY = getValidCoordinates('Y', config.GRID_SIZE);
+  const coordinateX = getValidCoordinates('X', userDefinedConfigs.GRID_SIZE);
+  const coordinateY = getValidCoordinates('Y', userDefinedConfigs.GRID_SIZE);
 
   const shiftedX = coordinateX - 1;
   const shiftedY = coordinateY - 1;

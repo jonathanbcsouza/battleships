@@ -13,6 +13,6 @@ define("ROCKET_ICON", '🚀');
 define("EXPLOSION_ICON", '💥');
 define("TROPHIE_ICON", '🏆');
 
-define("GRID_SIZE", 4);
-define("NUM_ROCKETS", 2);
-define("NUM_SHIPS", 1);
+define("GRID_SIZE", 8);
+define("NUM_ROCKETS", 20);
+define("NUM_SHIPS", 2);

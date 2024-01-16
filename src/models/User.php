@@ -96,8 +96,6 @@ class User
                 $stmt->bind_param("iss", $userId, $configName, $configValue);
                 $stmt->execute();
             }
-            
-            return $this->getUserConfig($userId);
         }
     }
 

@@ -1,4 +1,4 @@
-import * as config from '../configs/constants.js';
+import { userDefinedConfigs } from './phpSessions.js';
 
 async function fetchData(url, method, body) {
   const response = await fetch(url, {
@@ -18,8 +18,8 @@ async function fetchData(url, method, body) {
 
 export async function getGrid() {
   const response = await fetchData('../helpers/createGrid.php', 'POST', {
-    size: config.GRID_SIZE,
-    numShips: config.NUM_SHIPS,
+    size: userDefinedConfigs.GRID_SIZE,
+    numShips: userDefinedConfigs.NUM_SHIPS,
   });
 
   return response.json();
