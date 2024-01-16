@@ -13,6 +13,7 @@ class User
 
     public function createNewUser($username)
     {
+        $username = html_entity_decode($username);
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
