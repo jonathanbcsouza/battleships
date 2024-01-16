@@ -21,12 +21,25 @@ class UserController
     public function createNewUser($username)
     {
         $username_cleaned = $this->conn->real_escape_string($username);
-        return $this->model->createNewUser($username_cleaned);
+
+        $userId =  $this->model->createNewUser($username_cleaned);
+        return $userId;
+    }
+
+    public function setUserConfigs($userId)
+    {
+        $createdConfigs = $this->model->insertDefaultUserConfigs($userId);
+        return $createdConfigs;
     }
 
     public function getUserNameById($userId)
     {
         return $this->model->getUserNameById($userId);
+    }
+
+    public function getUserConfig($userId)
+    {
+        return $this->model->getUserConfig($userId);
     }
 
     public function getTrophies($userId)

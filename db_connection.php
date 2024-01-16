@@ -26,4 +26,5 @@ if ($conn->connect_error) {
 // Bootstrapping a new DB adn table
 $database = new Database($conn);
 $database->createDatabase($db_name);
-$database->createTable($table_name);
+$database->createUsersTable();
+$database->createUsersConfigTable();

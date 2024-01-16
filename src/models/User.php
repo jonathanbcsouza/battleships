@@ -54,6 +54,53 @@ class User
         return null;
     }
 
+    public function getUserConfig($userId)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM user_configs WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $configs = [];
+        while ($row = $result->fetch_assoc()) {
+            $configs[] = $row;
+        }
+
+        $stmt->close();
+
+        return $configs;
+    }
+
+    public function insertDefaultUserConfigs($userId)
+    {
+        $result = $this->getUserConfig($userId);
+
+        if (empty($result)) {
+            $defaultConfigs = [
+                'HIT_DIST' => HIT_DIST,
+                'HOT_DIST' => HOT_DIST,
+                'WARM_DIST' => WARM_DIST,
+                'COLD_DIST' => COLD_DIST,
+                'EMPTY_ICON' => EMPTY_ICON,
+                'SHIP_ICON' => SHIP_ICON,
+                'ROCKET_ICON' => ROCKET_ICON,
+                'EXPLOSION_ICON' => EXPLOSION_ICON,
+                'TROPHIE_ICON' => TROPHIE_ICON,
+                'GRID_SIZE' => GRID_SIZE,
+                'NUM_ROCKETS' => NUM_ROCKETS,
+                'NUM_SHIPS' => NUM_SHIPS
+            ];
+
+            foreach ($defaultConfigs as $configName => $configValue) {
+                $stmt = $this->conn->prepare("INSERT INTO user_configs (user_id, config_name, config_value) VALUES (?, ?, ?)");
+                $stmt->bind_param("iss", $userId, $configName, $configValue);
+                $stmt->execute();
+            }
+            
+            return $this->getUserConfig($userId);
+        }
+    }
+
     private function executeStatement($sql, $userId)
     {
         $stmt = $this->conn->prepare($sql);

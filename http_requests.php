@@ -1,6 +1,7 @@
 <?php
 
 include_once 'db_connection.php';
+require_once 'src/configs/constants.php';
 
 use App\Controllers\UserController;
 
@@ -11,6 +12,7 @@ $trophies = 0;
 if (isset($_SESSION['user_id'])) {
     $logged_user_id = $_SESSION['user_id'];
     $logged_user_name = $_SESSION['user_name'];
+    $logged_user_configs = $_SESSION['user_configs'];
 }
 
 if ($_SERVER["REQUEST_METHOD"] === 'GET' && $logged_user_id) {
@@ -23,8 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sanitizedUserName = filter_var($_POST['username_login_screen'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $userId = $userController->createNewUser($sanitizedUserName);
         $username = $userController->getUserNameById($userId);
+        $userConfigs = $userController->setUserConfigs($userId);
+
         $_SESSION['user_id'] = $userId;
         $_SESSION['user_name'] = $sanitizedUserName;
+        $_SESSION['user_configs'] = $userConfigs;
 
         header('Location: src/views/login.php?username=' . urlencode($sanitizedUserName));
         exit();
