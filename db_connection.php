@@ -13,7 +13,7 @@ $dotenv->load();
 $server_name = $_ENV['SERVER'];
 $db_username = $_ENV['USERNAME'];
 $password = $_ENV['PASSWORD'];
-$db_name = "battleship_db";
+$db_name = $_ENV['DATABASE'];
 $table_name = "users";
 
 // Create connection
