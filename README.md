@@ -73,6 +73,8 @@ The database `battleship_db` consists of the following tables:
 | `username`  | varchar(30)  | NOT NULL, UNIQUE                      |
 | `trophies`  | int          | NOT NULL                              |
 
+You can also preview the database schema using this interactive diagram: https://dbdiagram.io/d/65a6ded7ac844320ae0eae53.
+
 #### Running Tests
 
 1. **Running all tests**
@@ -93,16 +95,12 @@ The database `battleship_db` consists of the following tables:
    ./vendor/bin/phpunit tests/DatabaseTest.php
    ```
 
-#### Planned Enhancements
-
-- ~~Fix bug on the first screen. The trophies counter should update once the user is changed.~~
-  ✅ - Login page using query strings created.
-- ~~Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`~~.
-  ✅ Grid class created.
-- ~~Replace javascript constants~~.
-  ✅ Implemented user configurations table, adaptable for future setup menu.
-- ~~Replace js tests with PHP~~
-  ✅ Unit tests created.
-- Declare data types.
-- Replace javascript prompts with modals.
-- Use docker.
+| Planned Enhancements                                                                           | Status                                                                     |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Fix bug on the first screen. The trophies counter should update once the user is changed.      | ✅ - Login page using query strings created.                               |
+| Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`. | ✅ Grid class created.                                                     |
+| Replace javascript constants.                                                                  | ✅ Implemented user configurations table, adaptable for future setup menu. |
+| Replace js tests with PHP.                                                                     | ✅ Unit tests created.                                                     |
+| Declare data types.                                                                            | ✅ Data type and casting added.                                            |
+| Replace javascript prompts with modals.                                                        |                                                                            |
+| Use docker.                                                                                    |                                                                            |
