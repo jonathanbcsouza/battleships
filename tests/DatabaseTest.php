@@ -11,11 +11,10 @@ class DatabaseTest extends TestCase
 {
     private $db;
     private $conn;
-    private $testDbName = 'test_db_name';
+    private $testDbName = 'test';
 
     protected function setUp(): void
     {
-
         $server_name = $_ENV['SERVER'];
         $db_username = $_ENV['USERNAME'];
         $password = $_ENV['PASSWORD'];
@@ -23,12 +22,18 @@ class DatabaseTest extends TestCase
 
         $this->conn = new mysqli($server_name, $db_username, $password, $db_name);
 
-
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
 
         $this->db = new Database($this->conn);
+
+        $stmt = $this->conn->query("SHOW DATABASES LIKE '{$this->testDbName}'");
+        $result = $stmt->fetch_assoc();
+
+        if ($result) {
+            throw new Exception("The testing database '{$this->testDbName}' already exists. Please provide another name.");
+        }
     }
 
     public function testCreateDatabaseAndTables()
