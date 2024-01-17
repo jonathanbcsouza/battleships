@@ -26,20 +26,21 @@ Some things to note:
 
 - PHP and MySQL installed on your system.
 - Composer for managing PHP dependencies.
-- Node.js and npm for the javascript test.
 
 #### Setup and Execution
 
 1. Clone the repository to your local machine.
 2. Install Composer if you haven't already. You can download it from [here](https://getcomposer.org/download/). After downloading, you can install it globally on your system by following the instructions [here](https://getcomposer.org/doc/00-intro.md#globally).
-3. Run `composer install` to install the PHP dependencies.
+3. Run `composer install` to install the PHP dependencies. This will install the following dependencies:
+
+   - `vlucas/phpdotenv` for loading environment variables from a `.env` file.
+   - `phpunit/phpunit` for running tests.
+
+   It will also set up autoloading for the `App` namespace.
+
 4. Run `npm install` to install the javascript dependencies.
 5. Start a local PHP server using `php -S localhost:8000`.
 6. Open your browser and navigate to `http://localhost:8000` to play the game.
-
-#### Running Javascript Tests
-
-Execute `npm test` to run the test suite.
 
 #### Verifying Installed Libraries
 
@@ -72,6 +73,26 @@ The database `battleship_db` consists of the following tables:
 | `username`  | varchar(30)  | NOT NULL, UNIQUE                      |
 | `trophies`  | int          | NOT NULL                              |
 
+#### Running Tests
+
+1. **Running all tests**
+
+   Use the following command to run all tests:
+
+   ```bash
+   ./vendor/bin/phpunit tests
+   ```
+
+   This command will find and execute all tests located in the `tests` directory.
+
+2. **Running individual test files**
+
+   If you want to run a specific test file, you can do so by specifying the path to the file.
+
+   ```bash
+   ./vendor/bin/phpunit tests/DatabaseTest.php
+   ```
+
 #### Planned Enhancements
 
 - ~~Fix bug on the first screen. The trophies counter should update once the user is changed.~~
@@ -80,7 +101,8 @@ The database `battleship_db` consists of the following tables:
   ✅ Grid class created.
 - ~~Replace javascript constants~~.
   ✅ Implemented user configurations table, adaptable for future setup menu.
-- Replace js tests with PHP.
+- ~~Replace js tests with PHP~~
+  ✅ Unit tests created.
 - Declare data types.
 - Replace javascript prompts with modals.
 - Use docker.
