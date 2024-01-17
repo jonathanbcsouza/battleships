@@ -37,8 +37,7 @@ class UserController
 
     public function setUserConfigs($userId)
     {
-        $createdConfigs = $this->model->insertDefaultUserConfigs($userId);
-        return $createdConfigs;
+        $this->model->insertDefaultUserConfigs($userId);
     }
 
     public function getUserNameById($userId)
@@ -48,7 +47,13 @@ class UserController
 
     public function getUserConfig($userId)
     {
-        return $this->model->getUserConfig($userId);
+        $user_configs = $this->model->getUserConfig($userId);
+
+        if (empty($user_configs)) {
+            $this->setUserConfigs($userId);
+            $user_configs = $this->model->getUserConfig($userId);
+        }
+        return $user_configs;
     }
 
     public function getTrophies($userId)

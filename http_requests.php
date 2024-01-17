@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $userId = $userController->createNewUserIfNotExists($sanitizedUserName);
         $username = $userController->getUserNameById($userId);
-        $userController->setUserConfigs($userId);
         $userConfigs = $userController->getUserConfig($userId);
 
         $_SESSION['user_id'] = $userId;

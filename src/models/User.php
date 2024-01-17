@@ -100,29 +100,25 @@ class User
 
     public function insertDefaultUserConfigs($userId)
     {
-        $result = $this->getUserConfig($userId);
+        $defaultConfigs = [
+            'HIT_DIST' => HIT_DIST,
+            'HOT_DIST' => HOT_DIST,
+            'WARM_DIST' => WARM_DIST,
+            'COLD_DIST' => COLD_DIST,
+            'EMPTY_ICON' => EMPTY_ICON,
+            'SHIP_ICON' => SHIP_ICON,
+            'ROCKET_ICON' => ROCKET_ICON,
+            'EXPLOSION_ICON' => EXPLOSION_ICON,
+            'TROPHIE_ICON' => TROPHIE_ICON,
+            'GRID_SIZE' => GRID_SIZE,
+            'NUM_ROCKETS' => NUM_ROCKETS,
+            'NUM_SHIPS' => NUM_SHIPS
+        ];
 
-        if (empty($result)) {
-            $defaultConfigs = [
-                'HIT_DIST' => HIT_DIST,
-                'HOT_DIST' => HOT_DIST,
-                'WARM_DIST' => WARM_DIST,
-                'COLD_DIST' => COLD_DIST,
-                'EMPTY_ICON' => EMPTY_ICON,
-                'SHIP_ICON' => SHIP_ICON,
-                'ROCKET_ICON' => ROCKET_ICON,
-                'EXPLOSION_ICON' => EXPLOSION_ICON,
-                'TROPHIE_ICON' => TROPHIE_ICON,
-                'GRID_SIZE' => GRID_SIZE,
-                'NUM_ROCKETS' => NUM_ROCKETS,
-                'NUM_SHIPS' => NUM_SHIPS
-            ];
-
-            foreach ($defaultConfigs as $configName => $configValue) {
-                $stmt = $this->conn->prepare("INSERT INTO user_configs (user_id, config_name, config_value) VALUES (?, ?, ?)");
-                $stmt->bind_param("iss", $userId, $configName, $configValue);
-                $stmt->execute();
-            }
+        foreach ($defaultConfigs as $configName => $configValue) {
+            $stmt = $this->conn->prepare("INSERT INTO user_configs (user_id, config_name, config_value) VALUES (?, ?, ?)");
+            $stmt->bind_param("iss", $userId, $configName, $configValue);
+            $stmt->execute();
         }
     }
 
