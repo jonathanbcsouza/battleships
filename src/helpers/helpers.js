@@ -43,7 +43,6 @@ export function getClosestShipDistance(shiftedX, shiftedY, shipsCoordinates) {
     ([x, y]) => Math.abs(shiftedX - x) + Math.abs(shiftedY - y)
   );
 
-  // console.log(...distances);
   return Math.min(...distances);
 }
 
@@ -89,7 +88,7 @@ export function radarFeedback(d) {
 
   alert(message);
 
-  console.log(message);
+  console.log(d);
   return d === parseInt(userDefinedConfigs.HIT_DIST);
 }
 

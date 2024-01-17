@@ -11,6 +11,33 @@ class User
         $this->conn = $conn;
     }
 
+    public function checkUserExists($username)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        return $result->num_rows > 0;
+    }
+
+    public function getUserIdByUsername($username)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            $userId = $row['id'];
+        } else {
+            $userId = null;
+        }
+        $stmt->close();
+
+        return $userId;
+    }
+
     public function createNewUser($username)
     {
         $username = html_entity_decode($username);

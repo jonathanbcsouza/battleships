@@ -2,39 +2,35 @@
 
 include_once 'db_connection.php';
 require_once 'src/configs/constants.php';
+session_start();
 
 use App\Controllers\UserController;
 
 $userController = new UserController($conn, $db_name);
 
-$trophies = 0;
-
 if (isset($_SESSION['user_id'])) {
     $logged_user_id = $_SESSION['user_id'];
     $logged_user_name = $_SESSION['user_name'];
     $logged_user_configs = $_SESSION['user_configs'];
+    $trophies = $userController->getTrophies($logged_user_id);
 
     echo "<script>window.phpSessions = " . json_encode($_SESSION['user_configs']) . ";</script>";
 }
 
-if ($_SERVER["REQUEST_METHOD"] === 'GET' && $logged_user_id) {
-    $trophies = $userController->getTrophies($logged_user_id);
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST['username_login_screen']) && !isset($_SESSION['user_id'])) {
-
         $sanitizedUserName = filter_var($_POST['username_login_screen'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $userId = $userController->createNewUser($sanitizedUserName);
+
+        $userId = $userController->createNewUserIfNotExists($sanitizedUserName);
         $username = $userController->getUserNameById($userId);
         $userController->setUserConfigs($userId);
         $userConfigs = $userController->getUserConfig($userId);
 
         $_SESSION['user_id'] = $userId;
-        $_SESSION['user_name'] = $sanitizedUserName;
+        $_SESSION['user_name'] = $username;
         $_SESSION['user_configs'] = $userConfigs;
 
-        header('Location: src/views/login.php?username=' . urlencode($sanitizedUserName));
+        header('Location: ../../src/views/login.php?username=' . urlencode($_SESSION['user_name']));
         exit();
     }
 

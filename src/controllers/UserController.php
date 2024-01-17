@@ -18,6 +18,15 @@ class UserController
         $this->conn->select_db($db_name);
     }
 
+    public function createNewUserIfNotExists($username)
+    {
+        if (!$this->model->checkUserExists($username)) {
+            return $this->createNewUser($username);
+        } else {
+            return $this->model->getUserIdByUsername($username);
+        }
+    }
+
     public function createNewUser($username)
     {
         $username_cleaned = $this->conn->real_escape_string($username);
