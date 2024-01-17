@@ -8,10 +8,10 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$server_name = $_ENV['SERVER'];
-$db_username = $_ENV['USERNAME'];
-$password = $_ENV['PASSWORD'];
-$db_name = $_ENV['DATABASE'];
+$server_name = (string)$_ENV['SERVER'];
+$db_username = (string)$_ENV['USERNAME'];
+$password = (string)$_ENV['PASSWORD'];
+$db_name = (string)$_ENV['DATABASE'];
 $table_name = "users";
 
 // Create connection

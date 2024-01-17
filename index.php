@@ -2,9 +2,9 @@
 session_start();
 
 if (isset($_SESSION['user_name'])) {
+    $username = (string)$_SESSION['user_name'];
 
-    header('Location: src/views/login.php?username=' . $_SESSION['user_name']);
-
+    header('Location: src/views/login.php?username=' . $username);
     exit(); 
 }
 ?>

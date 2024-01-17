@@ -1,19 +1,19 @@
 <?php
 
 namespace App\Classes;
+
 require_once __DIR__ . '/../configs/constants.php';
 
 class Grid
 {
-    private $size;
-    private $grid;
-    private $numShips;
-    private $emptyIcon;
-    private $shipIcon;
+    private int $size;
+    private array $grid;
+    private int $numShips;
+    private string $emptyIcon;
+    private string $shipIcon;
 
-    public function __construct($size, $numShips)
+    public function __construct(int $size, int $numShips)
     {
-
         $this->size = $size;
         $this->numShips = $numShips;
         $this->emptyIcon = EMPTY_ICON;
@@ -22,13 +22,13 @@ class Grid
         $this->placeShips();
     }
 
-    private function buildGrid()
+    private function buildGrid(): array
     {
         $grid = array_fill(0, $this->size, array_fill(0, $this->size, $this->emptyIcon));
         return $grid;
     }
 
-    private function placeShips()
+    private function placeShips(): void
     {
         $shipsPlaced = 0;
         while ($shipsPlaced < $this->numShips) {
@@ -42,7 +42,7 @@ class Grid
         }
     }
 
-    public function getGrid()
+    public function getGrid(): array
     {
         return $this->grid;
     }

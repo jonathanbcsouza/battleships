@@ -9,9 +9,9 @@ $dotenv->load();
 
 class DatabaseTest extends TestCase
 {
-    private $db;
-    private $conn;
-    private $testDbName = 'test';
+    private Database $db;
+    private mysqli $conn;
+    private string $testDbName = 'test';
 
     protected function setUp(): void
     {
@@ -36,7 +36,7 @@ class DatabaseTest extends TestCase
         }
     }
 
-    public function testCreateDatabaseAndTables()
+    public function testCreateDatabaseAndTables(): void
     {
 
         $this->db->createDatabase($this->testDbName);
@@ -49,7 +49,7 @@ class DatabaseTest extends TestCase
         $this->assertTableExists('user_configs');
     }
 
-    private function assertTableExists($tableName)
+    private function assertTableExists(string $tableName): void
     {
         $stmt = $this->conn->query("SHOW TABLES LIKE '$tableName'");
         $result = $stmt->fetch_assoc();

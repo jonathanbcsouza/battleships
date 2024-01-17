@@ -5,16 +5,16 @@ use PHPUnit\Framework\TestCase;
 
 class GridTest extends TestCase
 {
-    private $grid;
-    private $size = 10;
-    private $numShips = 5;
+    private Grid $grid;
+    private int $size = 10;
+    private int $numShips = 5;
 
     protected function setUp(): void
     {
         $this->grid = new Grid($this->size, $this->numShips);
     }
 
-    public function testGridSize()
+    public function testGridSize(): void
     {
         $gridArray = $this->grid->getGrid();
         $this->assertCount($this->size, $gridArray);
@@ -24,7 +24,7 @@ class GridTest extends TestCase
         }
     }
 
-    public function testShipsPlacement()
+    public function testShipsPlacement(): void
     {
         $gridArray = $this->grid->getGrid();
         $shipCount = 0;

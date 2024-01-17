@@ -4,14 +4,14 @@ namespace App\Classes;
 
 class Database
 {
-    private $conn;
+    private \mysqli $conn;
 
-    public function __construct($conn)
+    public function __construct(\mysqli $conn)
     {
         $this->conn = $conn;
     }
 
-    public function createDatabase($db_name)
+    public function createDatabase(string $db_name): void
     {
         $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
         if (!$this->conn->query($sql)) {
@@ -20,7 +20,7 @@ class Database
         $this->conn->select_db($db_name);
     }
 
-    public function createUsersTable()
+    public function createUsersTable(): void
     {
         $create_table = "CREATE TABLE IF NOT EXISTS users (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -33,7 +33,7 @@ class Database
         }
     }
 
-      public function createUsersConfigTable()
+    public function createUsersConfigTable(): void
     {
         $create_table = "CREATE TABLE IF NOT EXISTS user_configs (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,

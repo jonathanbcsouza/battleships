@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use mysqli;
+
 class User
 {
-    private $conn;
+    private mysqli $conn;
 
-    public function __construct($conn)
+    public function __construct(mysqli $conn)
     {
         $this->conn = $conn;
     }
 
-    public function checkUserExists($username)
+    public function checkUserExists(string $username): bool
     {
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
@@ -22,7 +24,7 @@ class User
         return $result->num_rows > 0;
     }
 
-    public function getUserIdByUsername($username)
+    public function getUserIdByUsername(string $username): ?int
     {
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
@@ -38,7 +40,7 @@ class User
         return $userId;
     }
 
-    public function createNewUser($username)
+    public function createNewUser(string $username): int
     {
         $username = html_entity_decode($username);
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
@@ -66,22 +68,18 @@ class User
         return $userId;
     }
 
-    public function getUserNameById($userId)
+    public function getUserNameById(int $userId): string
     {
         $stmt = $this->conn->prepare("SELECT username FROM users WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            return $row['username'];
-        }
-
-        return null;
+        $row = $result->fetch_assoc();
+    
+        return $row['username'];
     }
 
-    public function getUserConfig($userId)
+    public function getUserConfig(int $userId): array
     {
         $stmt = $this->conn->prepare("SELECT * FROM user_configs WHERE user_id = ?");
         $stmt->bind_param("i", $userId);
@@ -98,7 +96,7 @@ class User
         return $configs;
     }
 
-    public function insertDefaultUserConfigs($userId)
+    public function insertDefaultUserConfigs(int $userId): void
     {
         $defaultConfigs = [
             'HIT_DIST' => HIT_DIST,
@@ -122,7 +120,7 @@ class User
         }
     }
 
-    private function executeStatement($sql, $userId)
+    private function executeStatement(string $sql, int $userId): bool
     {
         $stmt = $this->conn->prepare($sql);
         if ($stmt) {
@@ -135,35 +133,32 @@ class User
         }
     }
 
-    public function getTrophies($userId)
-    {
-        $trophies = 0;
-        $sql = "SELECT trophies FROM users WHERE id = ?";
+public function getTrophies(int $userId): int
+{
+    $sql = "SELECT trophies FROM users WHERE id = ?";
 
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt) {
-            $stmt->bind_param("s", $userId);
-            if ($stmt->execute()) {
-                $result = $stmt->get_result();
-                if ($row = $result->fetch_assoc()) {
-                    $trophies = $row['trophies'];
-                }
-            }
-            $stmt->close();
-        } else {
-            return false;
-        }
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        return $trophies;
+    $trophies = 0;
+    if ($row = $result->fetch_assoc()) {
+        $trophies = $row['trophies'];
     }
 
-    public function addTrophy($userId)
+    $stmt->close();
+
+    return $trophies;
+}
+
+    public function addTrophy(int $userId): bool
     {
         $sql = "UPDATE users SET trophies = trophies + 1 WHERE id = ?";
         return $this->executeStatement($sql, $userId);
     }
 
-    public function resetTrophies($userId)
+    public function resetTrophies(int $userId): bool
     {
         $sql = "UPDATE users SET trophies = 0 WHERE id = ?";
         return $this->executeStatement($sql, $userId);

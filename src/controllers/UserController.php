@@ -5,20 +5,21 @@ namespace App\Controllers;
 use App\Models\User;
 use InvalidArgumentException;
 use RuntimeException;
+use mysqli;
 
 class UserController
 {
-    private $model;
-    private $conn;
+    private User $model;
+    private mysqli $conn;
 
-    public function __construct($conn, $db_name)
+    public function __construct(mysqli $conn, string $db_name)
     {
         $this->model = new User($conn);
         $this->conn = $conn;
         $this->conn->select_db($db_name);
     }
 
-    public function createNewUserIfNotExists($username)
+    public function createNewUserIfNotExists(string $username): int
     {
         if (!$this->model->checkUserExists($username)) {
             return $this->createNewUser($username);
@@ -27,7 +28,7 @@ class UserController
         }
     }
 
-    public function createNewUser($username)
+    public function createNewUser(string $username): int
     {
         $username_cleaned = $this->conn->real_escape_string($username);
 
@@ -35,17 +36,17 @@ class UserController
         return $userId;
     }
 
-    public function setUserConfigs($userId)
+    public function setUserConfigs(int $userId): void
     {
         $this->model->insertDefaultUserConfigs($userId);
     }
 
-    public function getUserNameById($userId)
+    public function getUserNameById(int $userId): string
     {
         return $this->model->getUserNameById($userId);
     }
 
-    public function getUserConfig($userId)
+    public function getUserConfig(int $userId): array
     {
         $user_configs = $this->model->getUserConfig($userId);
 
@@ -56,14 +57,14 @@ class UserController
         return $user_configs;
     }
 
-    public function getTrophies($userId)
+    public function getTrophies(int $userId): int
     {
         return $this->model->getTrophies($userId);
     }
 
-    public function updateData($userId, $action)
+    public function updateData(int $userId, string $action): string
     {
-        $this->validateInput($userId, $action);
+        $this->validateUserIdAndAction($userId, $action);
 
         if ($action === 'add') {
             $result = $this->model->addTrophy($userId);
@@ -80,7 +81,7 @@ class UserController
         return "Data updated successfully. User id: " . $userId;
     }
 
-    private function validateInput($userId, $action)
+    private function validateUserIdAndAction(int $userId, string $action): void
     {
         if (empty($userId) || empty($action)) {
             throw new InvalidArgumentException("User ID and action are required.");

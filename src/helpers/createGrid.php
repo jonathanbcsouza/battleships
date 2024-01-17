@@ -4,8 +4,8 @@ require '../../vendor/autoload.php';
 
 use App\Classes\Grid;
 
-$size = $_POST['size'];
-$numShips = $_POST['numShips'];
+$size = (int)$_POST['size'];
+$numShips = (int)$_POST['numShips'];
 
 $gridObject = new Grid($size, $numShips);
 
