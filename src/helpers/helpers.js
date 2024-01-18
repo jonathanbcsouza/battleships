@@ -1,5 +1,14 @@
 import { userDefinedConfigs } from './phpSessions.js';
 
+import {
+  attackMessage,
+  launchRocketMessage,
+  enterCoordinateMessage,
+  invalidEntryMessage,
+  successMessage,
+} from './messages.js';
+
+// Game Logic
 export function removeShip(grid, x, y) {
   grid[x][y] = userDefinedConfigs.EXPLOSION_ICON;
   return grid;
@@ -20,7 +29,6 @@ export function revealGrid(grid) {
   board.appendChild(table);
 }
 
-// Game Logic
 export function locateShips(grid, numShips) {
   const gridSize = grid.length;
   let shipsLocation = [];
@@ -72,7 +80,7 @@ export function resetGame() {
 
 // Ui Updates
 export async function launchRocket(x, y) {
-  await showAlert(`Rocket launched to ${x + 1}, ${y + 1}! 🎯`);
+  await showAlert(launchRocketMessage(x, y));
 }
 
 export async function radarFeedback(dist) {
@@ -96,9 +104,7 @@ export function updateScreen(element, value) {
 }
 
 export async function selectCoordinates() {
-  await showAlert(
-    'Time to attack! \nAdjust your aim by entering the coordinates.'
-  );
+  await showAlert(attackMessage());
   const coordinateX = await getValidCoordinates(
     'X',
     userDefinedConfigs.GRID_SIZE
@@ -115,9 +121,9 @@ export async function selectCoordinates() {
 }
 
 async function getValidCoordinates(coordinate, maxNumber) {
-  let promptMessage = `Please enter your ${coordinate} coordinate.\n Choose a number between 1 and ${maxNumber}.`;
-  let errorMessage = `Invalid input. \nPlease enter a number between 1 and ${maxNumber}.`;
-  let successMessage = `Coordinate ${coordinate} defined!`;
+  let promptMessage = enterCoordinateMessage(coordinate, maxNumber);
+  let errorMessage = invalidEntryMessage(maxNumber);
+  let successMsg = successMessage(coordinate); 
   let coordinateValue;
   let numberValue;
 
@@ -127,7 +133,7 @@ async function getValidCoordinates(coordinate, maxNumber) {
     if (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber) {
       await showAlert(errorMessage, 'failure');
     } else {
-      await showAlert(successMessage, 'success');
+      await showAlert(successMsg, 'success');
     }
   } while (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber);
 

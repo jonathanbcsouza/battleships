@@ -1,4 +1,4 @@
-export function displayWelcomeMessage(username, numShips, numRockets) {
+export function welcomeMessage(username, numShips, numRockets) {
     return `
       <h3>Welcome aboard, Captain <strong>${username}</strong>!</h3>
       <p>You are now in the midst of a naval conflict. Your mission, should you choose to accept it, is to sink the remaining <strong>${numShips}</strong> enemy ${numShips > 1 ? 'ships' : 'ship'}.</p>
@@ -6,21 +6,21 @@ export function displayWelcomeMessage(username, numShips, numRockets) {
     `;
   }
   
-export function displayYouWinMessage() {
+export function youWinMessage() {
     return `
       <p>Congratulations, Captain! You've successfully defeated the enemy.</p>
       <p>The high seas are safe once again. 🎉</p>
     `;
   }
   
-export function displayGameOverMessage() {
+export function gameOverMessage() {
     return `
       <p>The battle is lost, Captain. But this is not the end.</p>
       <p>We will regroup and fight again! 💪</p>
     `;
   }
   
-export function displayContinueMessage(username, rocketsCount, shipsCount) {
+export function continueMessage(username, rocketsCount, shipsCount) {
     return `
       <div>
         <p>Command Center to <strong>${username}</strong>. 🎙️ Do you copy?</p>
@@ -28,4 +28,24 @@ export function displayContinueMessage(username, rocketsCount, shipsCount) {
         <p>Stay sharp and keep up the good work!</p>
       </div>
     `;
+  }
+
+  export function attackMessage() {
+    return `Time to attack! \nAdjust your aim by entering the coordinates.`;
+  }
+
+  export function launchRocketMessage(x, y) {
+    return `Rocket launched to ${x + 1}, ${y + 1}! 🎯`;
+  }
+
+  export function enterCoordinateMessage(coordinate, maxNumber) {
+    return `Please enter your ${coordinate} coordinate.\n Choose a number between 1 and ${maxNumber}.`;
+  }
+
+  export function invalidEntryMessage(maxNumber) {
+    return `Invalid input. \nPlease enter a number between 1 and ${maxNumber}.`;
+  }
+
+  export function successMessage(coordinate) {
+    return `Coordinate ${coordinate} defined!`;
   }

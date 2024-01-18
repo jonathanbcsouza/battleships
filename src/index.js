@@ -17,10 +17,10 @@ import {
 } from './helpers/helpers.js';
 
 import {
-  displayWelcomeMessage,
-  displayYouWinMessage,
-  displayGameOverMessage,
-  displayContinueMessage,
+  welcomeMessage,
+  youWinMessage,
+  gameOverMessage,
+  continueMessage,
 } from './helpers/messages.js';
 
 const uiElements = {
@@ -78,7 +78,7 @@ if (uiElements.resetScoreButton) {
 
 updateScreen(
   uiElements.msgContainer,
-  displayWelcomeMessage(
+  welcomeMessage(
     userNameValue,
     gameState.shipsCount,
     gameState.rocketsCount
@@ -167,7 +167,7 @@ function handleGameState() {
 function handleGameContinue() {
   updateScreen(
     uiElements.msgContainer,
-    displayContinueMessage(
+    continueMessage(
       userNameValue,
       gameState.rocketsCount,
       gameState.shipsCount
@@ -180,7 +180,7 @@ function handleGameContinue() {
 }
 
 function handleGameOver() {
-  updateScreen(uiElements.msgContainer, displayGameOverMessage());
+  updateScreen(uiElements.msgContainer, gameOverMessage());
   updateScreen(uiElements.restartBtn, 'Try Again 🔄');
   revealGrid(gameState.grid);
   uiElements.startBtn.style.display = 'none';
@@ -188,7 +188,7 @@ function handleGameOver() {
 
 function handleGameWin() {
   updateScreen(trophies, gameState.trophiesCount + 1);
-  updateScreen(uiElements.msgContainer, displayYouWinMessage());
+  updateScreen(uiElements.msgContainer, youWinMessage());
   updateScreen(uiElements.restartBtn, 'Play Again 🔄');
   addScore(userIdValue);
   revealGrid(gameState.grid);

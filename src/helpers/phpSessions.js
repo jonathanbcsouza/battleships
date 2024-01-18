@@ -1,4 +1,3 @@
-// config.js
 const phpSessions = window.phpSessions;
 
 export const userDefinedConfigs = phpSessions.reduce((acc, session) => {
