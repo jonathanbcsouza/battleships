@@ -2,6 +2,25 @@
 <?php include './partials/header.php'; ?>
 
 <main class="game-start-page">
+    <section id="modal" class="modal-content">
+        <div class="modal-body">
+            <button id="modalCloseBtn" class="close">&times;</button>
+            <p id="modalMessage"></p>
+            <div id="inputGroup" class="input-group">
+                <input type="text" id="modalInput">
+                <button id="modalSubmit">Enter Coordinate</button>
+            </div>
+        </div>
+    </section>
+    <section id="alertModal" class="modal-content">
+        <div class="alert-body">
+            <p id="alertMessage"></p>
+            <div id="inputGroup" class="input-group">
+                <button id="alertSubmit">Ok</button>
+            </div>
+        </div>
+    </section>
+
     <h1>Battleship Game</h1>
 
     <section class="game-msgs">

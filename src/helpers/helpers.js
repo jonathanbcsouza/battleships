@@ -71,35 +71,42 @@ export function resetGame() {
 }
 
 // Ui Updates
-export function launchRocket(x, y) {
-  alert(`Rocket launched to ${x + 1}, ${y + 1}!`);
+export async function launchRocket(x, y) {
+  await showAlert(`Rocket launched to ${x + 1}, ${y + 1}! 🎯`);
 }
 
-export function radarFeedback(d) {
-  let message = 'HOT';
+export async function radarFeedback(dist) {
+  let message = 'Hot! 🔥';
 
-  if (d == userDefinedConfigs.HIT_DIST) {
-    message = 'HIT!\nBOOM!';
-  } else if (d >= userDefinedConfigs.COLD_DIST) {
-    message = 'COLD';
-  } else if (d >= userDefinedConfigs.WARM_DIST) {
-    message = 'WARM';
+  if (dist == userDefinedConfigs.HIT_DIST) {
+    message = 'HIT! BOOM! \nShip destroyed! 💥';
+  } else if (dist >= userDefinedConfigs.COLD_DIST) {
+    message = 'Cold! ❄️';
+  } else if (dist >= userDefinedConfigs.WARM_DIST) {
+    message = 'Warm! 🌡️';
   }
 
-  alert(message);
+  await showAlert(message);
 
-  console.log(d);
-  return d === parseInt(userDefinedConfigs.HIT_DIST);
+  return dist === parseInt(userDefinedConfigs.HIT_DIST);
 }
 
 export function updateScreen(element, value) {
   element.innerHTML = value;
 }
 
-export function selectCoordinates() {
-  alert('Time to attack! Adjust your aim by entering the coordinates.');
-  const coordinateX = getValidCoordinates('X', userDefinedConfigs.GRID_SIZE);
-  const coordinateY = getValidCoordinates('Y', userDefinedConfigs.GRID_SIZE);
+export async function selectCoordinates() {
+  await showAlert(
+    'Time to attack! \nAdjust your aim by entering the coordinates.'
+  );
+  const coordinateX = await getValidCoordinates(
+    'X',
+    userDefinedConfigs.GRID_SIZE
+  );
+  const coordinateY = await getValidCoordinates(
+    'Y',
+    userDefinedConfigs.GRID_SIZE
+  );
 
   const shiftedX = coordinateX - 1;
   const shiftedY = coordinateY - 1;
@@ -107,16 +114,54 @@ export function selectCoordinates() {
   return { shiftedX, shiftedY };
 }
 
-export function getValidCoordinates(coordinate, maxNumber) {
-  let promptMessage = `Please enter your ${coordinate} coordinate. Choose a number between 1 and ${maxNumber}:`;
+async function getValidCoordinates(coordinate, maxNumber) {
+  let promptMessage = `Please enter your ${coordinate} coordinate.\n Choose a number between 1 and ${maxNumber}.`;
+  let errorMessage = `Invalid input. \nPlease enter a number between 1 and ${maxNumber}.`;
+  let successMessage = `Coordinate ${coordinate} defined!`;
   let coordinateValue;
-  do {
-    coordinateValue = parseInt(prompt(promptMessage), 10);
-  } while (
-    isNaN(coordinateValue) ||
-    coordinateValue <= 0 ||
-    coordinateValue > maxNumber
-  );
+  let numberValue;
 
-  return coordinateValue;
+  do {
+    coordinateValue = await showModal(promptMessage);
+    numberValue = Number(coordinateValue);
+    if (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber) {
+      await showAlert(errorMessage);
+    } else {
+      await showAlert(successMessage);
+    }
+  } while (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber);
+
+  return numberValue;
+}
+
+function showModal(message) {
+  return new Promise((resolve) => {
+    modalMessage.innerText = message;
+    modal.style.display = 'block';
+    modalInput.focus();
+
+    modalSubmit.onclick = function () {
+      resolve(modalInput.value);
+      modalInput.value = '';
+      modal.style.display = 'none';
+    };
+  });
+}
+
+function showAlert(message) {
+  return new Promise((resolve) => {
+    alertMessage.innerText = message;
+    alertModal.style.display = 'block';
+    alertSubmit.focus();
+
+    alertSubmit.onclick = function () {
+      alertModal.style.display = 'none';
+      resolve();
+    };
+  });
+}
+
+export function closeModal(modal, startBtn) {
+  modal.style.display = 'none';
+  startBtn.style.display = 'block';
 }

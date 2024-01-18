@@ -2,6 +2,8 @@
   --base-font-size: 1rem;
   --button-bg-color: #444;
   --button-hover-color: #555;
+  --button-close-color: #f44336;
+  --modal-border-color: #888;
   --input-focus-color: #007bff;
   --main-bg-color: #282c34;
   --main-text-color: #ffffff;
@@ -46,6 +48,10 @@ input {
   color: var(--main-text-color);
   text-align: center;
   transition: border-color 0.3s ease;
+}
+
+h1 {
+  text-align: center;
 }
 
 input::placeholder {
@@ -96,8 +102,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  margin-bottom: 10rem;
 }
 
 .game-msgs {
@@ -121,4 +126,58 @@ button:hover {
   display: flex;
   justify-content: center;
   gap: 10px;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.modal-content {
+  position: fixed;
+  display: none;
+  min-width: 25em;
+  top: 2%;
+  padding: 2em 1em;
+  border: 1px solid var(--modal-border-color);
+  border-radius: 10px;
+  background-color: var(--main-bg-color);
+  animation: animatetop 0.4s;
+}
+
+.input-group {
+  margin-top: 3%;
+}
+
+.alert-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.close {
+  color: var(--main-text-color);
+  background-color: transparent;
+  align-self: flex-end;
+  font-size: 1.5em;
+}
+
+.close:hover {
+  color: var(--button-close-color);
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+@keyframes animatetop {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

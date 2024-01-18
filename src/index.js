@@ -13,6 +13,7 @@ import {
   setGameState,
   updateScreen,
   useRockets,
+  closeModal,
 } from './helpers/helpers.js';
 
 import {
@@ -34,6 +35,11 @@ const uiElements = {
   startBtn: document.getElementById('startButton'),
   restartBtn: document.getElementById('restart'),
   resetScoreButton: document.getElementById('resetScoreButton'),
+  modalPanel: document.getElementById('modal'),
+  modalCloseButton: document.getElementById('modalCloseBtn'),
+  modalMsgPlaceholder: document.getElementById('modalMessage'),
+  modalInput: document.getElementById('modalInput'),
+  modalSubmitBtn: document.getElementById('modalSubmit'),
 };
 
 let username = uiElements.userNameInput;
@@ -52,6 +58,17 @@ let gameState = {
 uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
 uiElements.restartBtn.addEventListener('click', resetGame);
+
+uiElements.modalCloseButton.addEventListener('click', () => {
+  closeModal(uiElements.modalPanel, uiElements.startBtn);
+});
+
+uiElements.modalInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && !event.repeat) {
+    event.preventDefault();
+    uiElements.modalSubmitBtn.click();
+  }
+});
 
 if (uiElements.resetScoreButton) {
   uiElements.resetScoreButton.addEventListener('click', () => {
@@ -85,19 +102,21 @@ function playGame() {
 }
 
 async function initializeGame() {
-  gameState.state = 'playing';
-
-  gameState.grid = await getGrid();
-
-  console.table(gameState.grid);
-
+  uiElements.startBtn.style.display = 'none';
   if (uiElements.resetScoreButton) {
     uiElements.resetScoreButton.style.display = 'none';
   }
+  
+  gameState.state = 'playing';
+  gameState.grid = await getGrid();
+
+  console.table(gameState.grid);
 }
 
-function playTurn() {
-  const { shiftedX, shiftedY } = selectCoordinates();
+async function playTurn() {
+  const { shiftedX, shiftedY } = await selectCoordinates(
+    uiElements.modalMsgPlaceholder
+  );
   const shipsCoordinates = locateShips(
     gameState.grid,
     userDefinedConfigs.NUM_SHIPS
@@ -112,9 +131,9 @@ function playTurn() {
   gameState.rocketsCount = useRockets(gameState.rocketsCount);
 
   updateScreen(uiElements.rockets, gameState.rocketsCount);
-  launchRocket(shiftedX, shiftedY);
+  await launchRocket(shiftedX, shiftedY);
 
-  const isShipDestroyed = radarFeedback(closestShipDist);
+  const isShipDestroyed = await radarFeedback(closestShipDist);
 
   if (isShipDestroyed) {
     gameState.grid = removeShip(gameState.grid, shiftedX, shiftedY);
