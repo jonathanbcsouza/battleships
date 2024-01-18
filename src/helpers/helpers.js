@@ -125,9 +125,9 @@ async function getValidCoordinates(coordinate, maxNumber) {
     coordinateValue = await showModal(promptMessage);
     numberValue = Number(coordinateValue);
     if (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber) {
-      await showAlert(errorMessage);
+      await showAlert(errorMessage, 'failure');
     } else {
-      await showAlert(successMessage);
+      await showAlert(successMessage, 'success');
     }
   } while (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber);
 
@@ -148,11 +148,19 @@ function showModal(message) {
   });
 }
 
-function showAlert(message) {
+function showAlert(message, status = 'default') {
   return new Promise((resolve) => {
     alertMessage.innerText = message;
     alertModal.style.display = 'block';
     alertSubmit.focus();
+
+    if (status === 'success') {
+      alertModal.style.backgroundColor = 'var(--modal-success-bg-color)';
+    } else if (status === 'failure') {
+      alertModal.style.backgroundColor = 'var(--modal-failure-bg-color)';
+    } else {
+      alertModal.style.backgroundColor = '';
+    }
 
     alertSubmit.onclick = function () {
       alertModal.style.display = 'none';

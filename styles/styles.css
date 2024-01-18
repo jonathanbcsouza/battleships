@@ -7,6 +7,9 @@
   --input-focus-color: #007bff;
   --main-bg-color: #282c34;
   --main-text-color: #ffffff;
+  --modal-success-bg-color: #155724;
+  --modal-failure-bg-color: #721c24; 
+  --modal-content-color: #222;
 }
 
 * {
@@ -143,7 +146,8 @@ button:hover {
   padding: 2em 1em;
   border: 1px solid var(--modal-border-color);
   border-radius: 10px;
-  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
+  background-color: var(--modal-content-color);
   animation: animatetop 0.4s;
 }
 
@@ -158,17 +162,17 @@ button:hover {
 }
 
 .close {
-  color: var(--main-text-color);
   background-color: transparent;
   align-self: flex-end;
   font-size: 1.5em;
+  color: var(--button-close-color);
 }
 
 .close:hover {
-  color: var(--button-close-color);
   background-color: transparent;
   cursor: pointer;
   text-decoration: none;
+  color: var(--main-text-color);
 }
 
 @keyframes animatetop {
