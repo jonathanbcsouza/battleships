@@ -95,12 +95,14 @@ You can also preview the database schema using this interactive diagram: https:/
    ./vendor/bin/phpunit tests/DatabaseTest.php
    ```
 
-| Planned Enhancements                                                                           | Status                                                                     |
-| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Fix bug on the first screen. The trophies counter should update once the user is changed.      | ✅ - Login page using query strings created.                               |
-| Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`. | ✅ Grid class created.                                                     |
-| Replace javascript constants.                                                                  | ✅ Implemented user configurations table, adaptable for future setup menu. |
-| Replace js tests with PHP.                                                                     | ✅ Unit tests created.                                                     |
-| Declare data types.                                                                            | ✅ Data type and casting added.                                            |
-| Replace javascript prompts with modals.                                                        |                                                                            |
-| Use docker.                                                                                    |                                                                            |
+| Planned Enhancements | Status |
+| --- | --- |
+| Fix bug on the first screen. The trophies counter should update once the user is changed. | ✅ - Login page using query strings created. |
+| Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`. | ✅ Grid class created. |
+| Replace javascript constants. | ✅ Implemented user configurations table, adaptable for future setup menu. |
+| Replace js tests with PHP. | ✅ Unit tests created. |
+| Declare data types. | ✅ Data type and casting added. |
+| Replace javascript prompts with modals. | 🔄 In progress |
+| Use docker. | 🔄 In progress |
+
+
