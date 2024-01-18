@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_name'] = $username;
         $_SESSION['user_configs'] = $userConfigs;
 
-        header('Location: ../../src/views/login.php?username=' . urlencode($username));
+        header('Location: ../../src/views/game.php?username=' . urlencode($username));
         exit();
     }
 

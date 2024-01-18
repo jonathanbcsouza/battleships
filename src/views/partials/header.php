@@ -17,7 +17,7 @@
                     <span id="username" data-id="<?php echo $logged_user_id; ?>" data-user="<?php echo $logged_user_name; ?>">
                         user: <?php echo $logged_user_name; ?>
                     </span>
-                    <form action="login.php" method="post">
+                    <form action="game.php" method="post">
                         <button type="submit" name="logout">
                             Log out
                         </button>
