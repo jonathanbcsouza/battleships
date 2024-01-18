@@ -103,6 +103,4 @@ You can also preview the database schema using this interactive diagram: https:/
 | Replace js tests with PHP. | ✅ Unit tests created. |
 | Declare data types. | ✅ Data type and casting added. |
 | Replace javascript prompts with modals. | ✅ Prompts and alerts replaced with custom modal |
-| Use docker. | 🔄 In progress |
-
 
