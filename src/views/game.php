@@ -7,7 +7,7 @@
             <button id="modalCloseBtn" class="close">&times;</button>
             <p id="modalMessage"></p>
             <div id="inputGroup" class="input-group">
-                <input type="text" id="modalInput">
+                <input type="number" id="modalInput">
                 <button id="modalSubmit">Enter Coordinate</button>
             </div>
         </div>

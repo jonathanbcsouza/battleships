@@ -102,7 +102,7 @@ You can also preview the database schema using this interactive diagram: https:/
 | Replace javascript constants. | ✅ Implemented user configurations table, adaptable for future setup menu. |
 | Replace js tests with PHP. | ✅ Unit tests created. |
 | Declare data types. | ✅ Data type and casting added. |
-| Replace javascript prompts with modals. | 🔄 In progress |
+| Replace javascript prompts with modals. | ✅ Prompts and alerts replaced with custom modal |
 | Use docker. | 🔄 In progress |
 
 
