@@ -2,19 +2,31 @@
 require 'vendor/autoload.php';
 
 use App\Classes\Database;
-use Dotenv\Dotenv;
+use Aws\Ssm\SsmClient;
 
-// Load env variables
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
-$server_name = (string)$_ENV['SERVER'];
-$db_username = (string)$_ENV['USERNAME'];
-$password = (string)$_ENV['PASSWORD'];
-$db_name = (string)$_ENV['DATABASE'];
-$table_name = "users";
+// Retrieve credentials from AWS SSM / Parameter Store
+$client = new SsmClient([
+  'version' => 'latest',
+  'region'  => 'ap-southeast-2' 
+]);
 
-// Create connection
+$parameters = $client->getParameters([
+  'Names' => ['SERVER', 'USERNAME', 'PASSWORD', 'DATABASE'],
+  'WithDecryption' => true
+])->toArray();
+
+$params = [];
+
+foreach ($parameters['Parameters'] as $param) {
+  $params[$param['Name']] = $param['Value'];
+}
+
+$server_name = $params['SERVER'];
+$db_username = $params['USERNAME'];
+$password = $params['PASSWORD'];
+$db_name = $params['DATABASE'];
+
 $conn = new mysqli($server_name, $db_username, $password);
 
 if ($conn->connect_error) {
