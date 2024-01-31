@@ -44,7 +44,9 @@ const uiElements = {
 
 let username = uiElements.userNameInput;
 let userIdValue = username.dataset.id;
-let userNameValue = username.dataset.user;
+let userNameValue =
+  username.dataset.user.charAt(0).toUpperCase() +
+  username.dataset.user.slice(1);
 
 let gameState = {
   grid: [],
@@ -78,11 +80,7 @@ if (uiElements.resetScoreButton) {
 
 updateScreen(
   uiElements.msgContainer,
-  welcomeMessage(
-    userNameValue,
-    gameState.shipsCount,
-    gameState.rocketsCount
-  )
+  welcomeMessage(userNameValue, gameState.shipsCount, gameState.rocketsCount)
 );
 
 updateScreen(uiElements.rockets, userDefinedConfigs.NUM_ROCKETS);
@@ -106,7 +104,7 @@ async function initializeGame() {
   if (uiElements.resetScoreButton) {
     uiElements.resetScoreButton.style.display = 'none';
   }
-  
+
   gameState.state = 'playing';
   gameState.grid = await getGrid();
 
@@ -167,11 +165,7 @@ function handleGameState() {
 function handleGameContinue() {
   updateScreen(
     uiElements.msgContainer,
-    continueMessage(
-      userNameValue,
-      gameState.rocketsCount,
-      gameState.shipsCount
-    )
+    continueMessage(userNameValue, gameState.rocketsCount, gameState.shipsCount)
   );
   updateScreen(uiElements.startBtn, 'Continue ➡️');
   updateScreen(uiElements.restartBtn, 'Restart 🔄');
