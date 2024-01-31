@@ -1,8 +1,7 @@
 <?php
 
-include_once 'db_connection.php';
-require_once 'src/configs/constants.php';
 session_start();
+include_once 'db_connection.php';
 
 use App\Controllers\UserController;
 
@@ -18,21 +17,6 @@ if (isset($_SESSION['user_id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST['username_login_screen']) && !isset($_SESSION['user_id'])) {
-        
-        $sanitizedUserName = filter_var($_POST['username_login_screen'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $userId = $userController->createNewUserIfNotExists($sanitizedUserName);
-        $username = $userController->getUserNameById($userId);
-        $userConfigs = $userController->getUserConfig($userId);
-
-        $_SESSION['user_id'] = $userId;
-        $_SESSION['user_name'] = $username;
-        $_SESSION['user_configs'] = $userConfigs;
-
-        header('Location: ../../src/views/game.php?username=' . urlencode($username));
-        exit();
-    }
-
     if (isset($_POST['logout'])) {
         session_start();
         session_unset();
@@ -41,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['action'])) {
-        $userController->updateData((int)$_POST['user_id'], (string)$_POST['action']);
+        $userController->updateData((int)$logged_user_id, (string)$_POST['action']);
     }
 }
 

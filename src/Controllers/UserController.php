@@ -6,6 +6,7 @@ use App\Models\User;
 use InvalidArgumentException;
 use RuntimeException;
 use mysqli;
+use Exception;
 
 class UserController
 {
@@ -19,21 +20,59 @@ class UserController
         $this->conn->select_db($db_name);
     }
 
-    public function createNewUserIfNotExists(string $username): int
+    public function createNewUser(string $username, $password): int
     {
-        if (!$this->model->checkUserExists($username)) {
-            return $this->createNewUser($username);
-        } else {
-            return $this->model->getUserIdByUsername($username);
+
+        $userNameToLowerCase = strtolower($username);
+        $userExists = $this->doesUserExist($userNameToLowerCase);
+
+        if ($userExists) {
+            throw new Exception('User already exists');
         }
+
+        $usernameCleaned = $this->conn->real_escape_string($userNameToLowerCase);
+
+        $userId =  $this->model->createNewUser($usernameCleaned, $password);
+        return $userId;
     }
 
-    public function createNewUser(string $username): int
+    public function loginUser($username, $password)
     {
-        $username_cleaned = $this->conn->real_escape_string($username);
+        $userNameToLowerCase = strtolower($username);
+        $userExists = $this->doesUserExist($userNameToLowerCase);
 
-        $userId =  $this->model->createNewUser($username_cleaned);
+        if (!$userExists) {
+            throw new Exception('User does not exist');
+        }
+
+        $userId = $this->getUserIdByUsername($userNameToLowerCase);
+        $isPasswordCorrect = $this->verifyPassword($userId, $password);
+
+        if (!$isPasswordCorrect) {
+            throw new Exception('Incorrect password');
+        }
+
         return $userId;
+    }
+
+    public function doesUserExist(string $username): bool
+    {
+        return $this->model->doesUserExist($username);
+    }
+
+    public function getUserIdByUsername(string $username): int
+    {
+        return $this->model->getUserIdByUsername($username);
+    }
+
+    public function verifyPassword(int $userId, string $password): bool
+    {
+        $hashedPassword = $this->model->getHashedPasswordByUserId($userId);
+        $password = $password;
+
+        $isPasswordCorrect = password_verify($password, $hashedPassword);
+
+        return $isPasswordCorrect;
     }
 
     public function setUserConfigs(int $userId): void
