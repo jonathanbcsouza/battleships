@@ -35,12 +35,25 @@ Some things to note:
 
    - `vlucas/phpdotenv` for loading environment variables from a `.env` file.
    - `phpunit/phpunit` for running tests.
+   - `aws/aws-sdk-php` for integrating with AWS services.
 
    It will also set up autoloading for the `App` namespace.
 
 4. Run `npm install` to install the javascript dependencies.
 5. Start a local PHP server using `php -S localhost:8000`.
 6. Open your browser and navigate to `http://localhost:8000` to play the game.
+
+#### Alternative Setup: AWS Parameter Store
+
+It is an alternative to using a `.env` file for managing database credentials. Some of the benefits:
+
+- **Security**: Allows encrypted storage of sensitive data.
+
+- **Centralized Management**: Enable centralized secret management, simplifying application development.
+
+- **Auditability**: Integration with AWS CloudTrail and supports audit, improving compliance.
+
+To use this option, you need to create the parameters at AWS, then replace the content of `db_connection.php` with the content from `aws_connection.php`. This will allow the app to retrieve credentials from AWS SSM / Parameter Store instead of from the `.env` file.
 
 #### Verifying Installed Libraries
 
@@ -71,9 +84,10 @@ The database `battleship_db` consists of the following tables:
 | ----------- | ------------ | ------------------------------------- |
 | `id`        | int unsigned | NOT NULL, AUTO_INCREMENT, PRIMARY KEY |
 | `username`  | varchar(30)  | NOT NULL, UNIQUE                      |
+| `password`  | varchar(255) | NOT NULL                              |
 | `trophies`  | int          | NOT NULL                              |
 
-You can also preview the database schema using this interactive diagram: https://dbdiagram.io/d/65a6ded7ac844320ae0eae53.
+You can also preview the database schema using this interactive diagram: https://dbdiagram.io/d/65bae00cac844320ae2c8765
 
 #### Running Tests
 
@@ -94,13 +108,3 @@ You can also preview the database schema using this interactive diagram: https:/
    ```bash
    ./vendor/bin/phpunit tests/DatabaseTest.php
    ```
-
-| Planned Enhancements | Status |
-| --- | --- |
-| Fix bug on the first screen. The trophies counter should update once the user is changed. | ✅ - Login page using query strings created. |
-| Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`. | ✅ Grid class created. |
-| Replace javascript constants. | ✅ Implemented user configurations table, adaptable for future setup menu. |
-| Replace js tests with PHP. | ✅ Unit tests created. |
-| Declare data types. | ✅ Data type and casting added. |
-| Replace javascript prompts with modals. | ✅ Prompts and alerts replaced with custom modal |
-
