@@ -146,7 +146,7 @@ function handleGameWin() {
   updateScreen(uiElements.trophies, gameState.trophiesCount);
   updateScreen(uiElements.welcomeMsgElement, msg.youWin);
   updateScreen(uiElements.restartBtn, 'Restart Game');
-  localStorage.setItem('gameState.trophiesCount', gameState.trophiesCount);
+  localStorage.setItem('trophiesCount', gameState.trophiesCount);
   uiElements.startBtn.style.display = 'none';
   uiElements.restartBtn.style.display = 'block';
   revealGrid(gameState.grid);
