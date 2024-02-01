@@ -24,15 +24,15 @@ if (isset($_GET['error'])) : ?>
 
     <form id="loginForm" action="./user_auth.php" method="post">
         <input type="hidden" name="action" value="login">
-        <input name="username" placeholder="Enter your username" required>
-        <input name="password" type="password" placeholder="Enter your password" required>
+        <input type="text" name="username" placeholder="Enter your username" required>
+        <input type="password" name="password" placeholder="Enter your password" required>
         <button type="submit">Login</button>
     </form>
 
     <form id="registerForm" action="./user_auth.php" method="post" style="display: none;">
         <input type="hidden" name="action" value="register">
-        <input name="username" placeholder="Create your username" required>
-        <input name="password" type="password" placeholder="Create your password" required>
+        <input type="text" name="username" placeholder="Create your username" required>
+        <input type="password" name="password" placeholder="Create your password" required>
         <button type="submit">Register</button>
     </form>
 

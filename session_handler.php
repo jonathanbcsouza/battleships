@@ -33,7 +33,7 @@ if (!isset($_SESSION['user_id'])) {
     redirectToIndex();
 }
 
-function redirectToIndex()
+function redirectToIndex(): void
 {
     header('Location: ../../index.php');
     exit();

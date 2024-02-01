@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-function loginAndRedirect($userController, $userId)
+function loginAndRedirect(UserController $userController, int $userId): void
 {
     $username = $userController->getUserNameById($userId);
     $userConfigs = $userController->getUserConfig($userId);
@@ -46,12 +46,12 @@ function loginAndRedirect($userController, $userId)
     exit();
 }
 
-function sanitizeInput($input)
+function sanitizeInput(string $input): string
 {
     return filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 }
 
-function redirectWithError($location, $errorMessage)
+function redirectWithError(string $location, string $errorMessage): void
 {
     header('Location: ' . $location . '?error=' . urlencode($errorMessage));
     exit();

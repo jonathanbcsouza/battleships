@@ -26,7 +26,7 @@ export async function getGrid() {
 }
 
 async function handleScore(user_id, action) {
-  const response = await fetchData('../../user_session_handler.php', 'POST', {
+  const response = await fetchData('../../session_handler.php', 'POST', {
     user_id: user_id,
     action: action,
   });

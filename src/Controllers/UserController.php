@@ -20,7 +20,7 @@ class UserController
         $this->conn->select_db($db_name);
     }
 
-    public function createNewUser(string $username, $password): int
+    public function createNewUser(string $username, string $password): int
     {
 
         $userNameToLowerCase = strtolower($username);
@@ -36,7 +36,7 @@ class UserController
         return $userId;
     }
 
-    public function loginUser($username, $password)
+    public function loginUser(string $username, string $password): int
     {
         $userNameToLowerCase = strtolower($username);
         $userExists = $this->doesUserExist($userNameToLowerCase);
