@@ -1,49 +1,214 @@
 :root {
+  --base-font-size: 1rem;
+  --button-bg-color: #444;
+  --button-hover-color: #555;
+  --button-close-color: #f44336;
+  --modal-border-color: #888;
+  --input-focus-color: #007bff;
   --main-bg-color: #282c34;
   --main-text-color: #ffffff;
-  --button-bg-color: #4e5052;
-  --button-hover-color: #777;
-  --base-font-size: 1rem;
+  --main-switch-btn-color: #4caf50; /* Green */
+  --modal-success-bg-color: #155724;
+  --modal-failure-bg-color: #721c24;
+  --modal-content-color: #222;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
+  display: flex;
+  justify-content: center;
   align-items: center;
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
-  display: flex;
-  flex-direction: column;
   font-family: Arial, sans-serif;
-  justify-content: center;
-  margin: 0 auto;
-  min-height: 70vh;
+  line-height: 1.6;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 10px;
+}
+
+nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid var(--button-bg-color);
+  border-radius: 4px;
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
   text-align: center;
-  width: 50%;
+  transition: border-color 0.3s ease;
+}
+
+h1 {
+  text-align: center;
+}
+
+input::placeholder {
+  font-size: medium;
+}
+
+input:focus {
+  border-color: var(--input-focus-color);
+  outline: none;
 }
 
 button {
-  background-color: var(--button-bg-color);
+  padding: 1rem 1.25rem;
+  margin: 0.25rem 0.125rem;
   border: none;
+  border-radius: 3px;
+  background-color: var(--button-bg-color);
   color: var(--main-text-color);
   cursor: pointer;
-  font-size: var(--base-font-size);
-  margin: 0.25rem 0.125rem;
-  padding: 0.625rem 1.25rem;
 }
 
-.button:hover {
+button:hover {
   background-color: var(--button-hover-color);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-form {
+  margin-top: 20vh;
+}
+
+.login-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.msgContainer {
+  max-width: 40vw;
+  padding: 20px;
+  text-align: justify;
+}
+
+.game-start-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10rem;
+}
+
+.game-msgs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .game-stats {
   display: flex;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
   margin-bottom: 1rem;
 }
 
-.game-controls,
-.game-board {
-  align-items: center;
+.game-stats span {
+  font-size: 1.2rem;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-body {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.modal-content {
+  position: fixed;
+  display: none;
+  min-width: 25em;
+  top: 2%;
+  padding: 2em 1em;
+  border: 1px solid var(--modal-border-color);
+  border-radius: 10px;
+  color: var(--main-text-color);
+  background-color: var(--modal-content-color);
+  animation: animatetop 0.4s;
+}
+
+.input-group {
+  margin-top: 3%;
+}
+
+.alert-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.close {
+  background-color: transparent;
+  align-self: flex-end;
+  font-size: 1.5em;
+  color: var(--button-close-color);
+}
+
+.close:hover {
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--main-text-color);
+}
+
+.login-form {
+  text-align: center;
+}
+
+#toggleFormButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: inline-block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  border: none;
+  background-color: var(--main-switch-btn-color);
+  font-size: 16px;
+  color: var(--main-text-color);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+
+#toggleFormButton:hover {
+  background-color: var(--main-text-color);
+  color: var(--main-bg-color);
+}
+
+@keyframes animatetop {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
