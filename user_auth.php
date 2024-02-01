@@ -2,7 +2,7 @@
 
 session_start();
 include_once 'db_connection.php';
-require_once 'src/configs/constants.php';
+require_once 'src/Configs/constants.php';
 
 use App\Controllers\UserController;
 
@@ -42,7 +42,7 @@ function loginAndRedirect(UserController $userController, int $userId): void
     $_SESSION['user_name'] = $username;
     $_SESSION['user_configs'] = $userConfigs;
 
-    header('Location: ../../src/views/game.php?username=' . urlencode($username));
+    header('Location: ../../src/Views/game.php?username=' . urlencode($username));
     exit();
 }
 

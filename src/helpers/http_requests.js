@@ -1,4 +1,5 @@
 import { userDefinedConfigs } from './phpSessions.js';
+import { showAlert } from './helpers.js';
 
 async function fetchData(url, method, body) {
   const response = await fetch(url, {
@@ -17,7 +18,7 @@ async function fetchData(url, method, body) {
 }
 
 export async function getGrid() {
-  const response = await fetchData('../helpers/createGrid.php', 'POST', {
+  const response = await fetchData('../Helpers/createGrid.php', 'POST', {
     size: userDefinedConfigs.GRID_SIZE,
     numShips: userDefinedConfigs.NUM_SHIPS,
   });

@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-require_once __DIR__ . '/../configs/constants.php';
+require_once __DIR__ . '/../Configs/constants.php';
 
 class Grid
 {

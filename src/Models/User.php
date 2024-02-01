@@ -15,7 +15,8 @@ class User
 
     public function doesUserExist(string $username): bool
     {
-        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+        $sql = "SELECT id FROM users WHERE username = ?";
+        $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -26,7 +27,8 @@ class User
 
     public function getUserIdByUsername(string $username): ?int
     {
-        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+        $sql = "SELECT id FROM users WHERE username = ?";
+        $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -41,11 +43,11 @@ class User
 
     public function createNewUser(string $username, string $password): int
     {
-
         $username = html_entity_decode($username);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+        $sql = "SELECT id FROM users WHERE username = ?";
+        $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -72,7 +74,8 @@ class User
 
     public function getHashedPasswordByUserId(int $userId): string
     {
-        $stmt = $this->conn->prepare("SELECT password FROM users WHERE id = ?");
+        $sql = "SELECT password FROM users WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -91,7 +94,8 @@ class User
 
     public function getUserNameById(int $userId): string
     {
-        $stmt = $this->conn->prepare("SELECT username FROM users WHERE id = ?");
+        $sql = "SELECT username FROM users WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -102,7 +106,8 @@ class User
 
     public function getUserConfig(int $userId): array
     {
-        $stmt = $this->conn->prepare("SELECT * FROM user_configs WHERE user_id = ?");
+        $sql = "SELECT * FROM user_configs WHERE user_id = ?";
+        $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -141,11 +146,9 @@ class User
         }
     }
 
-
     public function getTrophies(int $userId): int
     {
         $sql = "SELECT trophies FROM users WHERE id = ?";
-
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $userId);
         $stmt->execute();

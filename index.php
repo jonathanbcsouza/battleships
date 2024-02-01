@@ -4,7 +4,7 @@ session_start();
 if (isset($_SESSION['user_name'])) {
     $username = (string)$_SESSION['user_name'];
 
-    header('Location: src/views/game.php?username=' . $username);
+    header('Location: src/Views/game.php?username=' . $username);
     exit();
 }
 
@@ -14,7 +14,7 @@ if (isset($_GET['error'])) : ?>
     </script>
 <?php endif; ?>
 
-<?php include './src/views/partials/header.php'; ?>
+<?php include './src/Views/partials/header.php'; ?>
 
 <main class="login-form">
 
@@ -38,6 +38,6 @@ if (isset($_GET['error'])) : ?>
 
 </main>
 
-<script type="module" src="./src/helpers/signUpBtn.js"></script>
+<script type="module" src="./src/Helpers/signUpBtn.js"></script>
 
-<?php include './src/views/partials/footer.php'; ?>
+<?php include './src/Views/partials/footer.php'; ?>
