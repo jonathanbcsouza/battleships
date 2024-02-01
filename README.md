@@ -21,6 +21,15 @@ Some things to note:
 ---
 
 ### Solution
+https://battleships.zone
+
+AWS services utilised:
+
+- **Amazon Route 53**: Used for domain name management and DNS routing.
+- **AWS SSM Parameter Store**: Used for secure, centralized management of application configuration data and secrets.
+- **Elastic Load Balancing (ELB)**: Using for managing the traffic between ports 443/8080. Also distributes incoming application traffic across multiple EC2 instances.
+- **AWS Certificate Manager**: Handles the creation, storage, and renewal of the SSL certificate.
+- **Amazon EC2 (Elastic Compute Cloud)**: Used to host the application servers.
 
 #### Prerequisites
 
@@ -35,12 +44,25 @@ Some things to note:
 
    - `vlucas/phpdotenv` for loading environment variables from a `.env` file.
    - `phpunit/phpunit` for running tests.
+   - `aws/aws-sdk-php` for integrating with AWS services.
 
    It will also set up autoloading for the `App` namespace.
 
 4. Run `npm install` to install the javascript dependencies.
 5. Start a local PHP server using `php -S localhost:8000`.
 6. Open your browser and navigate to `http://localhost:8000` to play the game.
+
+#### Alternative Setup: AWS Parameter Store
+
+It is an alternative to using a `.env` file for managing database credentials. Some of the benefits:
+
+- **Security**: Allows encrypted storage of sensitive data.
+
+- **Centralized Management**: Enable centralized secret management, simplifying application development.
+
+- **Auditability**: Integration with AWS CloudTrail and supports audit, improving compliance.
+
+To use this option, you need to create the parameters at AWS, then replace the content of `db_connection.php` with the content from `aws_connection.php`. This will allow the app to retrieve credentials from AWS SSM / Parameter Store instead of from the `.env` file.
 
 #### Verifying Installed Libraries
 
@@ -71,9 +93,10 @@ The database `battleship_db` consists of the following tables:
 | ----------- | ------------ | ------------------------------------- |
 | `id`        | int unsigned | NOT NULL, AUTO_INCREMENT, PRIMARY KEY |
 | `username`  | varchar(30)  | NOT NULL, UNIQUE                      |
+| `password`  | varchar(255) | NOT NULL                              |
 | `trophies`  | int          | NOT NULL                              |
 
-You can also preview the database schema using this interactive diagram: https://dbdiagram.io/d/65a6ded7ac844320ae0eae53.
+You can also preview the database schema using this interactive diagram: https://dbdiagram.io/d/65bae00cac844320ae2c8765
 
 #### Running Tests
 
@@ -95,12 +118,5 @@ You can also preview the database schema using this interactive diagram: https:/
    ./vendor/bin/phpunit tests/DatabaseTest.php
    ```
 
-| Planned Enhancements | Status |
-| --- | --- |
-| Fix bug on the first screen. The trophies counter should update once the user is changed. | ✅ - Login page using query strings created. |
-| Redesign logic and convert functions for handling `buildGrid()` and `placeShips()` with `PHP`. | ✅ Grid class created. |
-| Replace javascript constants. | ✅ Implemented user configurations table, adaptable for future setup menu. |
-| Replace js tests with PHP. | ✅ Unit tests created. |
-| Declare data types. | ✅ Data type and casting added. |
-| Replace javascript prompts with modals. | ✅ Prompts and alerts replaced with custom modal |
-
+#### Desired Functionality for Future:
+Replace the current input/output logic in the game interface with a clickable grid on the screen for beter UI/UX experience.

@@ -13,7 +13,7 @@ class User
         $this->conn = $conn;
     }
 
-    public function checkUserExists(string $username): bool
+    public function doesUserExist(string $username): bool
     {
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
@@ -35,22 +35,24 @@ class User
         } else {
             $userId = null;
         }
-        $stmt->close();
 
         return $userId;
     }
 
-    public function createNewUser(string $username): int
+    public function createNewUser(string $username, string $password): int
     {
+
         $username = html_entity_decode($username);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows === 0) {
-            $stmt = $this->conn->prepare("INSERT INTO users (username, trophies) VALUES (?, 0)");
-            $stmt->bind_param("s", $username);
+            $stmt = $this->conn->prepare("INSERT INTO users (username, password, trophies) VALUES (?, ?, 0)");
+            $stmt->bind_param("ss", $username, $hashedPassword);
             $result = $stmt->execute();
 
             if (!$result) {
@@ -68,6 +70,25 @@ class User
         return $userId;
     }
 
+    public function getHashedPasswordByUserId(int $userId): string
+    {
+        $stmt = $this->conn->prepare("SELECT password FROM users WHERE id = ?");
+        $stmt->bind_param("s", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            throw new \Exception("User not found.");
+        }
+
+        $row = $result->fetch_assoc();
+        $hashedPassword = $row['password'];
+
+        $stmt->close();
+
+        return $hashedPassword;
+    }
+
     public function getUserNameById(int $userId): string
     {
         $stmt = $this->conn->prepare("SELECT username FROM users WHERE id = ?");
@@ -75,7 +96,7 @@ class User
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-    
+
         return $row['username'];
     }
 
@@ -120,37 +141,25 @@ class User
         }
     }
 
-    private function executeStatement(string $sql, int $userId): bool
+
+    public function getTrophies(int $userId): int
     {
+        $sql = "SELECT trophies FROM users WHERE id = ?";
+
         $stmt = $this->conn->prepare($sql);
-        if ($stmt) {
-            $stmt->bind_param("s", $userId);
-            $result = $stmt->execute();
-            $stmt->close();
-            return $result;
-        } else {
-            return false;
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $trophies = 0;
+        if ($row = $result->fetch_assoc()) {
+            $trophies = $row['trophies'];
         }
+
+        $stmt->close();
+
+        return $trophies;
     }
-
-public function getTrophies(int $userId): int
-{
-    $sql = "SELECT trophies FROM users WHERE id = ?";
-
-    $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $trophies = 0;
-    if ($row = $result->fetch_assoc()) {
-        $trophies = $row['trophies'];
-    }
-
-    $stmt->close();
-
-    return $trophies;
-}
 
     public function addTrophy(int $userId): bool
     {
@@ -162,5 +171,18 @@ public function getTrophies(int $userId): int
     {
         $sql = "UPDATE users SET trophies = 0 WHERE id = ?";
         return $this->executeStatement($sql, $userId);
+    }
+
+    private function executeStatement(string $sql, int $userId): bool
+    {
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("s", $userId);
+            $result = $stmt->execute();
+            $stmt->close();
+            return $result;
+        } else {
+            return false;
+        }
     }
 }
