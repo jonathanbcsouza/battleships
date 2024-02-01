@@ -7,8 +7,9 @@
   --input-focus-color: #007bff;
   --main-bg-color: #282c34;
   --main-text-color: #ffffff;
+  --main-switch-btn-color: #4caf50; /* Green */
   --modal-success-bg-color: #155724;
-  --modal-failure-bg-color: #721c24; 
+  --modal-failure-bg-color: #721c24;
   --modal-content-color: #222;
 }
 
@@ -173,6 +174,32 @@ button:hover {
   cursor: pointer;
   text-decoration: none;
   color: var(--main-text-color);
+}
+
+.login-form {
+  text-align: center;
+}
+
+#toggleFormButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: inline-block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  border: none;
+  background-color: var(--main-switch-btn-color);
+  font-size: 16px;
+  color: var(--main-text-color);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+
+#toggleFormButton:hover {
+  background-color: var(--main-text-color);
+  color: var(--main-bg-color);
 }
 
 @keyframes animatetop {
