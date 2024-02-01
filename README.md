@@ -21,6 +21,15 @@ Some things to note:
 ---
 
 ### Solution
+https://battleships.zone
+
+AWS services utilised:
+
+- **Amazon Route 53**: Used for domain name management and DNS routing.
+- **AWS SSM Parameter Store**: Used for secure, centralized management of application configuration data and secrets.
+- **Elastic Load Balancing (ELB)**: Using for managing the traffic between ports 443/8080. Also distributes incoming application traffic across multiple EC2 instances.
+- **AWS Certificate Manager**: Handles the creation, storage, and renewal of the SSL certificate.
+- **Amazon EC2 (Elastic Compute Cloud)**: Used to host the application servers.
 
 #### Prerequisites
 
@@ -108,3 +117,6 @@ You can also preview the database schema using this interactive diagram: https:/
    ```bash
    ./vendor/bin/phpunit tests/DatabaseTest.php
    ```
+
+#### Desired Functionality for Future:
+Replace the current input/output logic in the game interface with a clickable grid on the screen for beter UI/UX experience.
