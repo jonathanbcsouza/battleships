@@ -21,7 +21,7 @@ if ($conn->connect_error) {
   throw new Exception("Connection failed: " . $conn->connect_error);
 }
 
-// Bootstrapping a new DB adn table
+// Bootstrapping a new DB and table
 $database = new Database($conn);
 $database->createDatabase($db_name);
 $database->createUsersTable();

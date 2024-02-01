@@ -1,6 +1,6 @@
 export function welcomeMessage(username, numShips, numRockets) {
     return `
-      <h3>Welcome aboard, Captain <strong>${username}</strong>!</h3>
+      <h3>Welcome aboard, captain <strong>${username}</strong>!</h3>
       <p>You are now in the midst of a naval conflict. Your mission, should you choose to accept it, is to sink the remaining <strong>${numShips}</strong> enemy ${numShips > 1 ? 'ships' : 'ship'}.</p>
       <p>You have <strong>${numRockets}</strong> ${numRockets > 1 ? 'rockets' : 'rocket'} at your disposal. Use them wisely and secure our victory!</p>
     `;
@@ -8,14 +8,14 @@ export function welcomeMessage(username, numShips, numRockets) {
   
 export function youWinMessage() {
     return `
-      <p>Congratulations, Captain! You've successfully defeated the enemy.</p>
+      <p>Congratulations, captain! You've successfully defeated the enemy.</p>
       <p>The high seas are safe once again. 🎉</p>
     `;
   }
   
 export function gameOverMessage() {
     return `
-      <p>The battle is lost, Captain. But this is not the end.</p>
+      <p>The battle is lost, captain. But this is not the end.</p>
       <p>We will regroup and fight again! 💪</p>
     `;
   }

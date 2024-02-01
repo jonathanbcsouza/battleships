@@ -1,4 +1,4 @@
-<?php include '../../http_requests.php'; ?>
+<?php include '../../session_handler.php'; ?>
 <?php include './partials/header.php'; ?>
 
 <main class="game-start-page">
