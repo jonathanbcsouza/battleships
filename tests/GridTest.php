@@ -7,36 +7,36 @@ class GridTest extends TestCase
 {
     private Grid $grid;
     private int $size = 10;
-    private int $numShips = 5;
+    private int $num_ships = 5;
 
     protected function setUp(): void
     {
-        $this->grid = new Grid($this->size, $this->numShips);
+        $this->grid = new Grid($this->size, $this->num_ships);
     }
 
     public function testGridSize(): void
     {
-        $gridArray = $this->grid->getGrid();
-        $this->assertCount($this->size, $gridArray);
+        $grid_array = $this->grid->getGrid();
+        $this->assertCount($this->size, $grid_array);
 
-        foreach ($gridArray as $row) {
+        foreach ($grid_array as $row) {
             $this->assertCount($this->size, $row);
         }
     }
 
     public function testShipsPlacement(): void
     {
-        $gridArray = $this->grid->getGrid();
-        $shipCount = 0;
+        $grid_array = $this->grid->getGrid();
+        $ship_count = 0;
 
-        foreach ($gridArray as $row) {
+        foreach ($grid_array as $row) {
             foreach ($row as $cell) {
                 if ($cell === SHIP_ICON) {
-                    $shipCount++;
+                    $ship_count++;
                 }
             }
         }
 
-        $this->assertEquals($this->numShips, $shipCount);
+        $this->assertEquals($this->num_ships, $ship_count);
     }
 }

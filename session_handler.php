@@ -5,13 +5,13 @@ include_once 'db_connection.php';
 
 use App\Controllers\UserController;
 
-$userController = new UserController($conn, $db_name);
+$user_controller = new UserController($conn, $db_name);
 
 if (isset($_SESSION['user_id'])) {
     $logged_user_id = (int)$_SESSION['user_id'];
     $logged_user_name = (string)$_SESSION['user_name'];
     $logged_user_configs = $_SESSION['user_configs'];
-    $trophies = $userController->getTrophies($logged_user_id);
+    $trophies = $user_controller->getTrophies($logged_user_id);
 
     echo "<script>window.phpSessions = " . json_encode($logged_user_configs) . ";</script>";
 }
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['action'])) {
-        $userController->updateData((int)$logged_user_id, (string)$_POST['action']);
+        $user_controller->updateData((int)$logged_user_id, (string)$_POST['action']);
     }
 }
 

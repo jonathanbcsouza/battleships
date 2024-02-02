@@ -11,7 +11,7 @@ class DatabaseTest extends TestCase
 {
     private Database $db;
     private mysqli $conn;
-    private string $testDbName = 'test';
+    private string $test_db_name = 'test';
 
     protected function setUp(): void
     {
@@ -28,19 +28,19 @@ class DatabaseTest extends TestCase
 
         $this->db = new Database($this->conn);
 
-        $stmt = $this->conn->query("SHOW DATABASES LIKE '{$this->testDbName}'");
+        $stmt = $this->conn->query("SHOW DATABASES LIKE '{$this->test_db_name}'");
         $result = $stmt->fetch_assoc();
 
         if ($result) {
-            throw new Exception("The testing database '{$this->testDbName}' already exists. Please provide another name.");
+            throw new Exception("The testing database '{$this->test_db_name}' already exists. Please provide another name.");
         }
     }
 
     public function testCreateDatabaseAndTables(): void
     {
 
-        $this->db->createDatabase($this->testDbName);
-        $this->conn->select_db($this->testDbName);
+        $this->db->createDatabase($this->test_db_name);
+        $this->conn->select_db($this->test_db_name);
 
         $this->db->createUsersTable();
         $this->assertTableExists('users');
@@ -49,15 +49,15 @@ class DatabaseTest extends TestCase
         $this->assertTableExists('user_configs');
     }
 
-    private function assertTableExists(string $tableName): void
+    private function assertTableExists(string $table_name): void
     {
-        $stmt = $this->conn->query("SHOW TABLES LIKE '$tableName'");
+        $stmt = $this->conn->query("SHOW TABLES LIKE '$table_name'");
         $result = $stmt->fetch_assoc();
-        $this->assertNotNull($result, "Table $tableName was not created successfully");
+        $this->assertNotNull($result, "Table $table_name was not created successfully");
     }
 
     protected function tearDown(): void
     {
-        $this->conn->query("DROP DATABASE IF EXISTS {$this->testDbName}");
+        $this->conn->query("DROP DATABASE IF EXISTS {$this->test_db_name}");
     }
 }
