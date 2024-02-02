@@ -1,4 +1,4 @@
-import { userDefinedConfigs } from './Helpers/phpSessions.js';
+import { userDefinedConfigs } from './Helpers/handle_php_sessions.js';
 import { getGrid, addScore, resetScore } from './Helpers/http_requests.js';
 
 import {

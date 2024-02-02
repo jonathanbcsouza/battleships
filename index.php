@@ -22,14 +22,14 @@ if (isset($_GET['error'])) : ?>
 
     <button id="toggleFormButton">Sign Up</button>
 
-    <form id="loginForm" action="./user_auth.php" method="post">
+    <form id="loginForm" action="./src/Helpers/user_auth.php" method="post">
         <input type="hidden" name="action" value="login">
         <input type="text" name="username" placeholder="Enter your username" autofocus required>
         <input type="password" name="password" placeholder="Enter your password" required>
         <button type="submit">Login</button>
     </form>
 
-    <form id="registerForm" action="./user_auth.php" method="post" style="display: none;">
+    <form id="registerForm" action="./src/Helpers/user_auth.php" method="post" style="display: none;">
         <input type="hidden" name="action" value="register">
         <input type="text" name="username" placeholder="Create your username" autofocus required>
         <input type="password" name="password" placeholder="Create your password" required>
@@ -38,6 +38,6 @@ if (isset($_GET['error'])) : ?>
 
 </main>
 
-<script type="module" src="./src/Helpers/signUpBtn.js"></script>
+<script type="module" src="./src/Helpers/handle_signup_btn.js"></script>
 
 <?php include './src/Views/partials/footer.php'; ?>

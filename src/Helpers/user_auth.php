@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-include_once 'db_connection.php';
-require_once 'src/Configs/constants.php';
+include_once '../../db_connection.php';
+require_once '../Configs/Constants.php';
 
 use App\Controllers\UserController;
 

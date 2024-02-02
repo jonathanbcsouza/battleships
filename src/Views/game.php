@@ -1,4 +1,4 @@
-<?php include '../../session_handler.php'; ?>
+<?php include './../Helpers/session_handler.php'; ?>
 <?php include './partials/header.php'; ?>
 
 <section id="modal" class="modal-content">

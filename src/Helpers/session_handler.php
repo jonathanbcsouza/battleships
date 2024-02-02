@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include_once 'db_connection.php';
+include_once '../../db_connection.php';
 
 use App\Controllers\UserController;
 
@@ -13,7 +13,7 @@ if (isset($_SESSION['user_id'])) {
     $logged_user_configs = $_SESSION['user_configs'];
     $trophies = $user_controller->getTrophies($logged_user_id);
 
-    echo "<script>window.phpSessions = " . json_encode($logged_user_configs) . ";</script>";
+    echo "<script>window.PHP_SESSIONS = " . json_encode($logged_user_configs) . ";</script>";
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

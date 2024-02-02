@@ -1,4 +1,5 @@
-import { userDefinedConfigs } from './phpSessions.js';
+import { userDefinedConfigs } from './handle_php_sessions.js';
+import { showAlert } from './helpers.js';
 
 async function fetchData(url, method, body) {
   const response = await fetch(url, {
@@ -17,23 +18,24 @@ async function fetchData(url, method, body) {
 }
 
 export async function getGrid() {
-  const response = await fetchData('../Helpers/createGrid.php', 'POST', {
+  console.log(userDefinedConfigs.NUM_SHIPS);
+  const response = await fetchData('../Helpers/create_grid.php', 'POST', {
     size: userDefinedConfigs.GRID_SIZE,
-    numShips: userDefinedConfigs.NUM_SHIPS,
+    num_ships: userDefinedConfigs.NUM_SHIPS,
   });
 
   return response.json();
 }
 
 async function handleScore(user_id, action) {
-  const response = await fetchData('../../session_handler.php', 'POST', {
+  const response = await fetchData('../Helpers/session_handler.php', 'POST', {
     user_id: user_id,
     action: action,
   });
 
   const data = await response.text();
 
-  alert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
+  showAlert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
 
   return action === 'reset';
 }
