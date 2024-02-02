@@ -1,12 +1,12 @@
 <?php
 
 session_start();
-include_once 'db_connection.php';
-require_once 'src/configs/constants.php';
+include_once '../../db_connection.php';
+require_once '../Configs/Constants.php';
 
 use App\Controllers\UserController;
 
-$userController = new UserController($conn, $db_name);
+$user_controller = new UserController($conn, $db_name);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sanitizedUserName = sanitizeInput($_POST['username']);
@@ -14,16 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($_POST['action'] === 'login') {
         try {
-            $userId = $userController->loginUser($sanitizedUserName, $password);
-            loginAndRedirect($userController, $userId);
+            $userId = $user_controller->loginUser($sanitizedUserName, $password);
+            loginAndRedirect($user_controller, $userId);
         } catch (Exception $e) {
             redirectWithError('../../index.php', $e->getMessage());
             exit();
         }
     } elseif ($_POST['action'] === 'register') {
         try {
-            $userId = $userController->createNewUser($sanitizedUserName, $password);
-            loginAndRedirect($userController, $userId);
+            $userId = $user_controller->createNewUser($sanitizedUserName, $password);
+            loginAndRedirect($user_controller, $userId);
         } catch (Exception $e) {
             redirectWithError('../../index.php', $e->getMessage());
             exit();
@@ -33,16 +33,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-function loginAndRedirect(UserController $userController, int $userId): void
+function loginAndRedirect(UserController $user_controller, int $userId): void
 {
-    $username = $userController->getUserNameById($userId);
-    $userConfigs = $userController->getUserConfig($userId);
+    $username = $user_controller->getUserNameById($userId);
+    $userConfigs = $user_controller->getUserConfig($userId);
 
     $_SESSION['user_id'] = $userId;
     $_SESSION['user_name'] = $username;
     $_SESSION['user_configs'] = $userConfigs;
 
-    header('Location: ../../src/views/game.php?username=' . urlencode($username));
+    header('Location: ../../src/Views/game.php?username=' . urlencode($username));
     exit();
 }
 

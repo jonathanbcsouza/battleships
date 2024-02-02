@@ -97,19 +97,12 @@ button:hover {
 }
 
 .msgContainer {
-  max-width: 40vw;
+  max-width: 90vw;
   padding: 20px;
   text-align: justify;
 }
 
 .game-start-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 10rem;
-}
-
-.game-msgs {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -142,7 +135,6 @@ button:hover {
 .modal-content {
   position: fixed;
   display: none;
-  min-width: 25em;
   top: 2%;
   padding: 2em 1em;
   border: 1px solid var(--modal-border-color);
