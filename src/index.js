@@ -1,5 +1,5 @@
-import { userDefinedConfigs } from './helpers/phpSessions.js';
-import { getGrid, addScore, resetScore } from './helpers/http_requests.js';
+import { userDefinedConfigs } from './Helpers/handle_php_sessions.js';
+import { getGrid, addScore, resetScore } from './Helpers/http_requests.js';
 
 import {
   getClosestShipDistance,
@@ -14,14 +14,14 @@ import {
   updateScreen,
   useRockets,
   closeModal,
-} from './helpers/helpers.js';
+} from './Helpers/helpers.js';
 
 import {
   welcomeMessage,
   youWinMessage,
   gameOverMessage,
   continueMessage,
-} from './helpers/messages.js';
+} from './Helpers/messages.js';
 
 const uiElements = {
   userNameInput: document.getElementById('username'),

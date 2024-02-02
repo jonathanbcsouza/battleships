@@ -5,11 +5,11 @@ require '../../vendor/autoload.php';
 use App\Classes\Grid;
 
 $size = (int)$_POST['size'];
-$numShips = (int)$_POST['numShips'];
+$num_ships = (int)$_POST['num_ships'];
 
-$gridObject = new Grid($size, $numShips);
+$grid_object = new Grid($size, $num_ships);
 
-$grid = $gridObject->getGrid();
+$grid = $grid_object->getGrid();
 
 header('Content-Type: application/json');
 echo json_encode($grid);

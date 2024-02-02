@@ -23,36 +23,36 @@ class UserController
     public function createNewUser(string $username, string $password): int
     {
 
-        $userNameToLowerCase = strtolower($username);
-        $userExists = $this->doesUserExist($userNameToLowerCase);
+        $user_name_to_lower_case = strtolower($username);
+        $user_exists = $this->doesUserExist($user_name_to_lower_case);
 
-        if ($userExists) {
+        if ($user_exists) {
             throw new Exception('User already exists');
         }
 
-        $usernameCleaned = $this->conn->real_escape_string($userNameToLowerCase);
+        $username_cleaned = $this->conn->real_escape_string($user_name_to_lower_case);
 
-        $userId =  $this->model->createNewUser($usernameCleaned, $password);
-        return $userId;
+        $user_id =  $this->model->createNewUser($username_cleaned, $password);
+        return $user_id;
     }
 
     public function loginUser(string $username, string $password): int
     {
-        $userNameToLowerCase = strtolower($username);
-        $userExists = $this->doesUserExist($userNameToLowerCase);
+        $user_name_to_lower_case = strtolower($username);
+        $user_exists = $this->doesUserExist($user_name_to_lower_case);
 
-        if (!$userExists) {
+        if (!$user_exists) {
             throw new Exception('User does not exist');
         }
 
-        $userId = $this->getUserIdByUsername($userNameToLowerCase);
-        $isPasswordCorrect = $this->verifyPassword($userId, $password);
+        $user_id = $this->getUserIdByUsername($user_name_to_lower_case);
+        $is_password_correct = $this->verifyPassword($user_id, $password);
 
-        if (!$isPasswordCorrect) {
+        if (!$is_password_correct) {
             throw new Exception('Incorrect password');
         }
 
-        return $userId;
+        return $user_id;
     }
 
     public function doesUserExist(string $username): bool
@@ -65,50 +65,50 @@ class UserController
         return $this->model->getUserIdByUsername($username);
     }
 
-    public function verifyPassword(int $userId, string $password): bool
+    public function verifyPassword(int $user_id, string $password): bool
     {
-        $hashedPassword = $this->model->getHashedPasswordByUserId($userId);
+        $hashed_password = $this->model->getHashedPasswordByUserId($user_id);
         $password = $password;
 
-        $isPasswordCorrect = password_verify($password, $hashedPassword);
+        $is_password_correct = password_verify($password, $hashed_password);
 
-        return $isPasswordCorrect;
+        return $is_password_correct;
     }
 
-    public function setUserConfigs(int $userId): void
+    public function setUserConfigs(int $user_id): void
     {
-        $this->model->insertDefaultUserConfigs($userId);
+        $this->model->insertDefaultUserConfigs($user_id);
     }
 
-    public function getUserNameById(int $userId): string
+    public function getUserNameById(int $user_id): string
     {
-        return $this->model->getUserNameById($userId);
+        return $this->model->getUserNameById($user_id);
     }
 
-    public function getUserConfig(int $userId): array
+    public function getUserConfig(int $user_id): array
     {
-        $user_configs = $this->model->getUserConfig($userId);
+        $user_configs = $this->model->getUserConfig($user_id);
 
         if (empty($user_configs)) {
-            $this->setUserConfigs($userId);
-            $user_configs = $this->model->getUserConfig($userId);
+            $this->setUserConfigs($user_id);
+            $user_configs = $this->model->getUserConfig($user_id);
         }
         return $user_configs;
     }
 
-    public function getTrophies(int $userId): int
+    public function getTrophies(int $user_id): int
     {
-        return $this->model->getTrophies($userId);
+        return $this->model->getTrophies($user_id);
     }
 
-    public function updateData(int $userId, string $action): string
+    public function updateData(int $user_id, string $action): string
     {
-        $this->validateUserIdAndAction($userId, $action);
+        $this->validateUserIdAndAction($user_id, $action);
 
         if ($action === 'add') {
-            $result = $this->model->addTrophy($userId);
+            $result = $this->model->addTrophy($user_id);
         } else if ($action === 'reset') {
-            $result = $this->model->resetTrophies($userId);
+            $result = $this->model->resetTrophies($user_id);
         } else {
             throw new InvalidArgumentException("Invalid action.");
         }
@@ -117,12 +117,12 @@ class UserController
             throw new RuntimeException("Error updating data: " . $this->conn->error);
         }
 
-        return "Data updated successfully. User id: " . $userId;
+        return "Data updated successfully. User id: " . $user_id;
     }
 
-    private function validateUserIdAndAction(int $userId, string $action): void
+    private function validateUserIdAndAction(int $user_id, string $action): void
     {
-        if (empty($userId) || empty($action)) {
+        if (empty($user_id) || empty($action)) {
             throw new InvalidArgumentException("User ID and action are required.");
         }
     }

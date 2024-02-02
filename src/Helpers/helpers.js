@@ -1,4 +1,4 @@
-import { userDefinedConfigs } from './phpSessions.js';
+import { userDefinedConfigs } from './handle_php_sessions.js';
 
 import {
   attackMessage,
@@ -154,7 +154,7 @@ function showModal(message) {
   });
 }
 
-function showAlert(message, status = 'default') {
+export function showAlert(message, status = 'default') {
   return new Promise((resolve) => {
     alertMessage.innerText = message;
     alertModal.style.display = 'block';
