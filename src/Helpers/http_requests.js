@@ -1,5 +1,4 @@
 import { userDefinedConfigs } from './phpSessions.js';
-import { showAlert } from './helpers.js';
 
 async function fetchData(url, method, body) {
   const response = await fetch(url, {
