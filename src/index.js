@@ -2,18 +2,20 @@ import { userDefinedConfigs } from './Helpers/handle_php_sessions.js';
 import { getGrid, addScore, resetScore } from './Helpers/http_requests.js';
 
 import {
+  createGrid,
+  defineTargets,
   getClosestShipDistance,
   launchRocket,
   locateShips,
   radarFeedback,
   removeShip,
   resetGame,
-  revealGrid,
-  selectCoordinates,
+  replaceGrid,
   setGameState,
+  shiftCoordinates,
+  updateDisplayedGrid,
   updateScreen,
   useRockets,
-  closeModal,
 } from './Helpers/helpers.js';
 
 import {
@@ -35,11 +37,6 @@ const uiElements = {
   startBtn: document.getElementById('startButton'),
   restartBtn: document.getElementById('restart'),
   resetScoreButton: document.getElementById('resetScoreButton'),
-  modalPanel: document.getElementById('modal'),
-  modalCloseButton: document.getElementById('modalCloseBtn'),
-  modalMsgPlaceholder: document.getElementById('modalMessage'),
-  modalInput: document.getElementById('modalInput'),
-  modalSubmitBtn: document.getElementById('modalSubmit'),
 };
 
 let username = uiElements.userNameInput;
@@ -61,17 +58,6 @@ uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
 uiElements.restartBtn.addEventListener('click', resetGame);
 
-uiElements.modalCloseButton.addEventListener('click', () => {
-  closeModal(uiElements.modalPanel, uiElements.startBtn);
-});
-
-uiElements.modalInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' && !event.repeat) {
-    event.preventDefault();
-    uiElements.modalSubmitBtn.click();
-  }
-});
-
 if (uiElements.resetScoreButton) {
   uiElements.resetScoreButton.addEventListener('click', () => {
     resetScore(userIdValue);
@@ -89,13 +75,13 @@ updateScreen(uiElements.rocketsIcon, userDefinedConfigs.ROCKET_ICON);
 updateScreen(uiElements.shipsDestroyedIcon, userDefinedConfigs.EXPLOSION_ICON);
 updateScreen(uiElements.trophiesIcon, userDefinedConfigs.TROPHIE_ICON);
 
-function playGame() {
+async function playGame() {
   if (gameState.state === 'init') {
-    initializeGame();
+    await initializeGame();
   }
 
   if (gameState.state === 'playing') {
-    playTurn();
+    await playTurn();
   }
 }
 
@@ -108,13 +94,16 @@ async function initializeGame() {
   gameState.state = 'playing';
   gameState.grid = await getGrid();
 
-  console.table(gameState.grid);
+  createGrid(gameState.grid);
 }
 
 async function playTurn() {
-  const { shiftedX, shiftedY } = await selectCoordinates(
-    uiElements.modalMsgPlaceholder
-  );
+  const { coordinateX, coordinateY } = await defineTargets();
+  const { shiftedX, shiftedY } = shiftCoordinates(coordinateX, coordinateY);
+  await launchRocket(shiftedX, shiftedY);
+
+  updateDisplayedGrid(coordinateX, coordinateY, gameState.grid);
+
   const shipsCoordinates = locateShips(
     gameState.grid,
     userDefinedConfigs.NUM_SHIPS
@@ -129,7 +118,6 @@ async function playTurn() {
   gameState.rocketsCount = useRockets(gameState.rocketsCount);
 
   updateScreen(uiElements.rockets, gameState.rocketsCount);
-  await launchRocket(shiftedX, shiftedY);
 
   const isShipDestroyed = await radarFeedback(closestShipDist);
 
@@ -167,16 +155,16 @@ function handleGameContinue() {
     uiElements.msgContainer,
     continueMessage(userNameValue, gameState.rocketsCount, gameState.shipsCount)
   );
-  updateScreen(uiElements.startBtn, 'Continue ➡️');
+
   updateScreen(uiElements.restartBtn, 'Restart 🔄');
-  uiElements.startBtn.style.display = 'block';
   uiElements.restartBtn.style.display = 'block';
+  playGame();
 }
 
 function handleGameOver() {
   updateScreen(uiElements.msgContainer, gameOverMessage());
   updateScreen(uiElements.restartBtn, 'Try Again 🔄');
-  revealGrid(gameState.grid);
+  replaceGrid(gameState.grid);
   uiElements.startBtn.style.display = 'none';
 }
 
@@ -185,7 +173,6 @@ function handleGameWin() {
   updateScreen(uiElements.msgContainer, youWinMessage());
   updateScreen(uiElements.restartBtn, 'Play Again 🔄');
   addScore(userIdValue);
-  revealGrid(gameState.grid);
   uiElements.startBtn.style.display = 'none';
   uiElements.restartBtn.style.display = 'block';
 }

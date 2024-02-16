@@ -18,7 +18,6 @@ async function fetchData(url, method, body) {
 }
 
 export async function getGrid() {
-  console.log(userDefinedConfigs.NUM_SHIPS);
   const response = await fetchData('../Helpers/create_grid.php', 'POST', {
     size: userDefinedConfigs.GRID_SIZE,
     num_ships: userDefinedConfigs.NUM_SHIPS,

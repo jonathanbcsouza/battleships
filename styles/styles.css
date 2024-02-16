@@ -58,6 +58,11 @@ h1 {
   text-align: center;
 }
 
+td:hover {
+  cursor: crosshair;
+  background-color: var(--button-close-color);
+}
+
 input::placeholder {
   font-size: medium;
 }
@@ -125,12 +130,6 @@ button:hover {
   gap: 10px;
 }
 
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  align-items: center;
-}
 
 .modal-content {
   position: fixed;
@@ -154,12 +153,7 @@ button:hover {
   align-items: center;
 }
 
-.close {
-  background-color: transparent;
-  align-self: flex-end;
-  font-size: 1.5em;
-  color: var(--button-close-color);
-}
+
 
 .close:hover {
   background-color: transparent;

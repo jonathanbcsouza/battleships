@@ -31,21 +31,9 @@ export function continueMessage(username, rocketsCount, shipsCount) {
   }
 
   export function attackMessage() {
-    return `Time to attack! \nAdjust your aim by entering the coordinates.`;
+    return `Time to attack! \nAdjust your aim by selecting the target.`;
   }
 
   export function launchRocketMessage(x, y) {
     return `Rocket launched to ${x + 1}, ${y + 1}! 🎯`;
-  }
-
-  export function enterCoordinateMessage(coordinate, maxNumber) {
-    return `Please enter your ${coordinate} coordinate.\n Choose a number between 1 and ${maxNumber}.`;
-  }
-
-  export function invalidEntryMessage(maxNumber) {
-    return `Invalid input. \nPlease enter a number between 1 and ${maxNumber}.`;
-  }
-
-  export function successMessage(coordinate) {
-    return `Coordinate ${coordinate} defined!`;
   }

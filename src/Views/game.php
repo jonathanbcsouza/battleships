@@ -1,16 +1,6 @@
 <?php include './../Helpers/session_handler.php'; ?>
 <?php include './partials/header.php'; ?>
 
-<section id="modal" class="modal-content">
-    <div class="modal-body">
-        <button id="modalCloseBtn" class="close">&times;</button>
-        <p id="modalMessage"></p>
-        <div id="inputGroup" class="input-group">
-            <input type="number" id="modalInput">
-            <button id="modalSubmit">Enter Coordinate</button>
-        </div>
-    </div>
-</section>
 <section id="alertModal" class="modal-content">
     <div class="alert-body">
         <p id="alertMessage"></p>
@@ -43,6 +33,10 @@
         </div>
     </section>
 
+    <section class="game-board">
+        <p id="board"></p>
+    </section>
+
     <section class="game-controls">
         <div class="btn-container">
             <button id="startButton" aria-label="Start game" autofocus>Start Mission</button> <button id="restart" aria-label="Restart game">Restart</button>
@@ -52,9 +46,7 @@
         </div>
     </section>
 
-    <section class="game-board">
-        <p id="board"></p>
-    </section>
+
 </main>
 
 <script type="module" src="../index.js"></script>

@@ -1,12 +1,6 @@
 import { userDefinedConfigs } from './handle_php_sessions.js';
 
-import {
-  attackMessage,
-  launchRocketMessage,
-  enterCoordinateMessage,
-  invalidEntryMessage,
-  successMessage,
-} from './messages.js';
+import { attackMessage, launchRocketMessage } from './messages.js';
 
 // Game Logic
 export function removeShip(grid, x, y) {
@@ -14,19 +8,75 @@ export function removeShip(grid, x, y) {
   return grid;
 }
 
-export function revealGrid(grid) {
+export function createGrid(grid) {
   const table = document.createElement('table');
 
   for (let i = 0; i < grid.length; i++) {
     const row = document.createElement('tr');
     for (let j = 0; j < grid[i].length; j++) {
       const cell = document.createElement('td');
-      cell.textContent = grid[i][j];
+      cell.textContent = userDefinedConfigs.EMPTY_ICON;
       row.appendChild(cell);
     }
     table.appendChild(row);
   }
+
   board.appendChild(table);
+
+  showAlert(attackMessage());
+}
+
+export function replaceGrid(grid) {
+
+  const table = document.querySelector('table');
+
+  while (table.firstChild) {
+    table.removeChild(table.firstChild);
+  }
+
+  for (let i = 0; i < grid.length; i++) {
+    const row = document.createElement('tr');
+    for (let j = 0; j < grid[i].length; j++) {
+      const cell = document.createElement('td');
+      cell.textContent = grid[i][j]; 
+      row.appendChild(cell);
+    }
+    table.appendChild(row);
+  }
+}
+
+export function defineTargets() {
+  const table = document.querySelector('table');
+
+  return new Promise((resolve) => {
+    table.addEventListener('click', (event) => {
+      if (event.target.tagName === 'TD') {
+        const cell = event.target;
+        const coordinateX = cell.parentNode.rowIndex + 1;
+        const coordinateY = cell.cellIndex + 1;
+
+        resolve({ coordinateX, coordinateY });
+      }
+    });
+  });
+}
+
+export function updateDisplayedGrid(coordinateX, coordinateY, grid) {
+  const table = document.querySelector('table');
+  const cell = table.rows[coordinateX - 1].cells[coordinateY - 1];
+
+  if (grid[coordinateX - 1][coordinateY - 1] === userDefinedConfigs.SHIP_ICON) {
+    cell.textContent = userDefinedConfigs.EXPLOSION_ICON;
+  } else {
+    cell.textContent = 'X';
+  }
+}
+
+export function shiftCoordinates(x, y) {
+  const shiftedX = x - 1;
+  const shiftedY = y - 1;
+
+  return { shiftedX, shiftedY };
 }
 
 export function locateShips(grid, numShips) {
@@ -78,7 +128,6 @@ export function resetGame() {
   location.reload();
 }
 
-// Ui Updates
 export async function launchRocket(x, y) {
   await showAlert(launchRocketMessage(x, y));
 }
@@ -103,79 +152,15 @@ export function updateScreen(element, value) {
   element.innerHTML = value;
 }
 
-export async function selectCoordinates() {
-  await showAlert(attackMessage());
-  const coordinateX = await getValidCoordinates(
-    'X',
-    userDefinedConfigs.GRID_SIZE
-  );
-  const coordinateY = await getValidCoordinates(
-    'Y',
-    userDefinedConfigs.GRID_SIZE
-  );
-
-  const shiftedX = coordinateX - 1;
-  const shiftedY = coordinateY - 1;
-
-  return { shiftedX, shiftedY };
-}
-
-async function getValidCoordinates(coordinate, maxNumber) {
-  let promptMessage = enterCoordinateMessage(coordinate, maxNumber);
-  let errorMessage = invalidEntryMessage(maxNumber);
-  let successMsg = successMessage(coordinate); 
-  let coordinateValue;
-  let numberValue;
-
-  do {
-    coordinateValue = await showModal(promptMessage);
-    numberValue = Number(coordinateValue);
-    if (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber) {
-      await showAlert(errorMessage, 'failure');
-    } else {
-      await showAlert(successMsg, 'success');
-    }
-  } while (isNaN(numberValue) || numberValue < 1 || numberValue > maxNumber);
-
-  return numberValue;
-}
-
-function showModal(message) {
-  return new Promise((resolve) => {
-    modalMessage.innerText = message;
-    modal.style.display = 'block';
-    modalInput.focus();
-
-    modalSubmit.onclick = function () {
-      resolve(modalInput.value);
-      modalInput.value = '';
-      modal.style.display = 'none';
-    };
-  });
-}
-
-export function showAlert(message, status = 'default') {
+export function showAlert(message) {
   return new Promise((resolve) => {
     alertMessage.innerText = message;
     alertModal.style.display = 'block';
     alertSubmit.focus();
-
-    if (status === 'success') {
-      alertModal.style.backgroundColor = 'var(--modal-success-bg-color)';
-    } else if (status === 'failure') {
-      alertModal.style.backgroundColor = 'var(--modal-failure-bg-color)';
-    } else {
-      alertModal.style.backgroundColor = '';
-    }
 
     alertSubmit.onclick = function () {
       alertModal.style.display = 'none';
       resolve();
     };
   });
-}
-
-export function closeModal(modal, startBtn) {
-  modal.style.display = 'none';
-  startBtn.style.display = 'block';
 }
