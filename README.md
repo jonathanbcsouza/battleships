@@ -1,35 +1,24 @@
-# Battleships
+# Battleships Challenge
 
-Your challenge is to implement this simplified game of Battleships using text input and output.
+This project implements a simplified version of the classic game Battleships.
 
-The computer randomly chooses the location of two single-cell "ships" on a board of 8 by 8 cells. The user then has 20 guesses to find the two ships.
+## Overview
 
-The user enters a co-ordinate, for example `3,5`, and the computer locates the nearest ship to that co-ordinate and tells them they're "hot" if they're 1 to 2 cells away, "warm" if they're 3 to 4 cells away, or "cold" if they're further away.
+The computer randomly places two single-cell "ships" on a grid-based board. The user's objective is to locate and sink these ships within a limited number of rockets.
 
-As an example, `3,5` is three cells away from `2,7` because (3 - 2) + (7 - 5) = 3, so they'd be told they were "warm".
+## Gameplay
 
-If the user correctly guesses a ship's location, they're told they've got a hit and that ship is removed from the board. The game ends when both ships have been hit by the user, or the user has used up their 20 guesses.
-
-Some things to note:
-
-- Write your code in a style that you consider to be production quality.
-- We're more interested in your logical thinking, process and coding style. Show us what you know about writing great software.
-- Feel free to use your language of choice. We prefer C#, Java, JavaScript, TypeScript, or Python.
-- Please include guidance on how to install and execute your solution.
-- Please create a merge request when you are done.
+1. The user has a fixed number of guesses (X) to find and sink the ships (Y).
+2. The user inputs/selects coordinates in the format `row,column`, such as `3,5`.
+3. Based on the user's input/selection, the computer provides feedback:
+   - "Hot" if the guessed coordinate is 1 to 2 cells away from the nearest ship.
+   - "Warm" if the guessed coordinate is 3 to 4 cells away.
+   - "Cold" if the guessed coordinate is farther away.
+4. For example, if the user inputs `3,5`, and the nearest ship is at `2,7`, they receive a "warm" response because the distance is three cells.
+5. If the user correctly guesses a ship's location, they receive a "hit" message, and that ship is removed from the board.
+6. The game continues until the user sinks both ships or exhausts their available rockets.
 
 ---
-
-### Solution
-https://battleships.zone
-
-AWS services utilised:
-
-- **Amazon Route 53**: Used for domain name management and DNS routing.
-- **AWS SSM Parameter Store**: Used for secure, centralized management of application configuration data and secrets.
-- **Elastic Load Balancing (ELB)**: Using for managing the traffic between ports 443/8080. Also distributes incoming application traffic across multiple EC2 instances.
-- **AWS Certificate Manager**: Handles the creation, storage, and renewal of the SSL certificate.
-- **Amazon EC2 (Elastic Compute Cloud)**: Used to host the application servers.
 
 #### Prerequisites
 
@@ -118,5 +107,10 @@ You can also preview the database schema using this interactive diagram: https:/
    ./vendor/bin/phpunit tests/DatabaseTest.php
    ```
 
-#### Desired Functionality for Future:
-Replace the current input/output logic in the game interface with a clickable grid on the screen for beter UI/UX experience.
+#### AWS services that can be used:
+
+- **Amazon Route 53**: Used for domain name management and DNS routing.
+- **AWS SSM Parameter Store**: Used for secure, centralized management of application configuration data and secrets.
+- **Elastic Load Balancing (ELB)**: Using for managing the traffic between ports 443/8080. Also distributes incoming application traffic across multiple EC2 instances.
+- **AWS Certificate Manager**: Handles the creation, storage, and renewal of the SSL certificate.
+- **Amazon EC2 (Elastic Compute Cloud)**: Used to host the application servers.
