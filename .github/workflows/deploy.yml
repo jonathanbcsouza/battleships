@@ -14,8 +14,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       EB_ENVIRONMENT_NAME: ${{ secrets.EB_ENVIRONMENT_NAME }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      TURSO_DB_URL: ${{ secrets.TURSO_DB_URL }}
-      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -41,6 +39,20 @@ jobs:
       - name: Prepare deployment package
         run: zip -r app.zip . -x ".git/*" "tests/*" "*.gitignore" "node_modules/*"
 
+      - name: Log Environment Variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          echo "EB_ENVIRONMENT_NAME: ${{ secrets.EB_ENVIRONMENT_NAME }}"
+          echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
+
+      - name: Validate Environment Variables
+        run: |
+          if [[ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]]; then echo "AWS_ACCESS_KEY_ID is not set"; exit 1; fi
+          if [[ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]]; then echo "AWS_SECRET_ACCESS_KEY is not set"; exit 1; fi
+          if [[ -z "${{ secrets.EB_ENVIRONMENT_NAME }}" ]]; then echo "EB_ENVIRONMENT_NAME is not set"; exit 1; fi
+          if [[ -z "${{ secrets.AWS_REGION }}" ]]; then echo "AWS_REGION is not set"; exit 1; fi
+
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -49,10 +61,6 @@ jobs:
           application_name: battleships
           environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
           region: ${{ secrets.AWS_REGION }}
-          version_label: v-${{ github.run_number }}
+          version_label: v-${{ github.run_number }}-${{ github.sha }}-${{ github.event.head_commit.timestamp }}
           deployment_package: app.zip
-
-      - name: Set environment variables
-        run: |
-          aws elasticbeanstalk update-environment --environment-name ${{ secrets.EB_ENVIRONMENT_NAME }} --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=TURSO_DB_URL,Value=${{ secrets.TURSO_DB_URL }}
-          aws elasticbeanstalk update-environment --environment-name ${{ secrets.EB_ENVIRONMENT_NAME }} --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=TURSO_AUTH_TOKEN,Value=${{ secrets.TURSO_AUTH_TOKEN }}
+          wait_for_deployment: true
