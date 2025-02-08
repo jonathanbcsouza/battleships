@@ -5,24 +5,22 @@ namespace App\Controllers;
 use App\Models\User;
 use InvalidArgumentException;
 use RuntimeException;
-use mysqli;
+use PDO;
 use Exception;
 
 class UserController
 {
     private User $model;
-    private mysqli $conn;
+    private PDO $conn;
 
-    public function __construct(mysqli $conn, string $db_name)
+    public function __construct(PDO $conn, string $db_name)
     {
         $this->model = new User($conn);
         $this->conn = $conn;
-        $this->conn->select_db($db_name);
     }
 
     public function createNewUser(string $username, string $password): int
     {
-
         $user_name_to_lower_case = strtolower($username);
         $user_exists = $this->doesUserExist($user_name_to_lower_case);
 
@@ -30,10 +28,9 @@ class UserController
             throw new Exception('User already exists');
         }
 
-        $username_cleaned = $this->conn->real_escape_string($user_name_to_lower_case);
+        $username_cleaned = htmlspecialchars($user_name_to_lower_case, ENT_QUOTES, 'UTF-8');
 
-        $user_id =  $this->model->createNewUser($username_cleaned, $password);
-        return $user_id;
+        return $this->model->createNewUser($username_cleaned, $password);
     }
 
     public function loginUser(string $username, string $password): int
@@ -68,11 +65,7 @@ class UserController
     public function verifyPassword(int $user_id, string $password): bool
     {
         $hashed_password = $this->model->getHashedPasswordByUserId($user_id);
-        $password = $password;
-
-        $is_password_correct = password_verify($password, $hashed_password);
-
-        return $is_password_correct;
+        return password_verify($password, $hashed_password);
     }
 
     public function setUserConfigs(int $user_id): void
@@ -114,7 +107,7 @@ class UserController
         }
 
         if (!$result) {
-            throw new RuntimeException("Error updating data: " . $this->conn->error);
+            throw new RuntimeException("Error updating data: " . $this->conn->errorInfo()[2]);
         }
 
         return "Data updated successfully. User id: " . $user_id;

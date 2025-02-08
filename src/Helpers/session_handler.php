@@ -39,4 +39,4 @@ function redirectToIndex(): void
     exit();
 }
 
-$conn->close();
+$conn = null;

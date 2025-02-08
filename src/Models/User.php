@@ -2,43 +2,37 @@
 
 namespace App\Models;
 
-use mysqli;
+use PDO;
+use Exception;
 
 class User
 {
-    private mysqli $conn;
+    private PDO $conn;
 
-    public function __construct(mysqli $conn)
+    public function __construct(PDO $conn)
     {
         $this->conn = $conn;
     }
 
     public function doesUserExist(string $username): bool
     {
-        $sql = "SELECT id FROM users WHERE username = ?";
+        $sql = "SELECT id FROM users WHERE username = :username";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $username);
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
 
-        return $result->num_rows > 0;
+        return $stmt->fetch() !== false;
     }
 
     public function getUserIdByUsername(string $username): ?int
     {
-        $sql = "SELECT id FROM users WHERE username = ?";
+        $sql = "SELECT id FROM users WHERE username = :username";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $username);
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
         $stmt->execute();
-        $result = $stmt->get_result();
-        if ($row = $result->fetch_assoc()) {
-            $user_id = $row['id'];
-        } else {
-            $user_id = null;
-        }
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $user_id;
+        return $row ? (int) $row['id'] : null;
     }
 
     public function createNewUser(string $username, string $password): int
@@ -46,80 +40,53 @@ class User
         $username = html_entity_decode($username);
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "SELECT id FROM users WHERE username = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows === 0) {
-            $stmt = $this->conn->prepare("INSERT INTO users (username, password, trophies) VALUES (?, ?, 0)");
-            $stmt->bind_param("ss", $username, $hashed_password);
-            $result = $stmt->execute();
-
-            if (!$result) {
-                throw new \Exception("Error creating user: " . $this->conn->error);
-            }
-
-            $user_id = $this->conn->insert_id;
-        } else {
-            $row = $result->fetch_assoc();
-            $user_id = $row['id'];
+        if ($this->doesUserExist($username)) {
+            throw new Exception("User already exists.");
         }
 
-        $stmt->close();
+        $sql = "INSERT INTO users (username, password, trophies) VALUES (:username, :password, 0)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+        $stmt->bindParam(":password", $hashed_password, PDO::PARAM_STR);
+        $stmt->execute();
 
-        return $user_id;
+        return (int) $this->conn->lastInsertId();
     }
 
     public function getHashedPasswordByUserId(int $user_id): string
     {
-        $sql = "SELECT password FROM users WHERE id = ?";
+        $sql = "SELECT password FROM users WHERE id = :user_id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $user_id);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows === 0) {
-            throw new \Exception("User not found.");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            throw new Exception("User not found.");
         }
 
-        $row = $result->fetch_assoc();
-        $hashed_password = $row['password'];
-
-        $stmt->close();
-
-        return $hashed_password;
+        return $row['password'];
     }
 
     public function getUserNameById(int $user_id): string
     {
-        $sql = "SELECT username FROM users WHERE id = ?";
+        $sql = "SELECT username FROM users WHERE id = :user_id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
 
-        return $row['username'];
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['username'] ?? "";
     }
 
     public function getUserConfig(int $user_id): array
     {
-        $sql = "SELECT * FROM user_configs WHERE user_id = ?";
+        $sql = "SELECT * FROM user_configs WHERE user_id = :user_id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
 
-        $configs = [];
-        while ($row = $result->fetch_assoc()) {
-            $configs[] = $row;
-        }
-
-        $stmt->close();
-
-        return $configs;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function insertDefaultUserConfigs(int $user_id): void
@@ -139,53 +106,42 @@ class User
             'NUM_SHIPS' => NUM_SHIPS
         ];
 
+        $sql = "INSERT INTO user_configs (user_id, config_name, config_value) VALUES (:user_id, :config_name, :config_value)";
+        $stmt = $this->conn->prepare($sql);
+
         foreach ($default_configs as $config_name => $config_value) {
-            $stmt = $this->conn->prepare("INSERT INTO user_configs (user_id, config_name, config_value) VALUES (?, ?, ?)");
-            $stmt->bind_param("iss", $user_id, $config_name, $config_value);
+            $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+            $stmt->bindParam(":config_name", $config_name, PDO::PARAM_STR);
+            $stmt->bindParam(":config_value", $config_value, PDO::PARAM_STR);
             $stmt->execute();
         }
     }
 
     public function getTrophies(int $user_id): int
     {
-        $sql = "SELECT trophies FROM users WHERE id = ?";
+        $sql = "SELECT trophies FROM users WHERE id = :user_id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
 
-        $trophies = 0;
-        if ($row = $result->fetch_assoc()) {
-            $trophies = $row['trophies'];
-        }
-
-        $stmt->close();
-
-        return $trophies;
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['trophies'] : 0;
     }
 
     public function addTrophy(int $user_id): bool
     {
-        $sql = "UPDATE users SET trophies = trophies + 1 WHERE id = ?";
-        return $this->executeStatement($sql, $user_id);
+        return $this->executeStatement("UPDATE users SET trophies = trophies + 1 WHERE id = :user_id", $user_id);
     }
 
     public function resetTrophies(int $user_id): bool
     {
-        $sql = "UPDATE users SET trophies = 0 WHERE id = ?";
-        return $this->executeStatement($sql, $user_id);
+        return $this->executeStatement("UPDATE users SET trophies = 0 WHERE id = :user_id", $user_id);
     }
 
     private function executeStatement(string $sql, int $user_id): bool
     {
         $stmt = $this->conn->prepare($sql);
-        if ($stmt) {
-            $stmt->bind_param("s", $user_id);
-            $result = $stmt->execute();
-            $stmt->close();
-            return $result;
-        } else {
-            return false;
-        }
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }

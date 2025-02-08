@@ -1,6 +1,8 @@
 <?php
-
+ob_start();
 session_start();
+session_start();
+
 include_once '../../db_connection.php';
 require_once '../Configs/Constants.php';
 
@@ -56,3 +58,5 @@ function redirectWithError(string $location, string $errorMessage): void
     header('Location: ' . $location . '?error=' . urlencode($errorMessage));
     exit();
 }
+
+ob_end_flush();
