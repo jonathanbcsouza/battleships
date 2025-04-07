@@ -1,14 +1,23 @@
 <?php
 ob_start();
-session_start();
+
+// Configure session
+ini_set('session.cookie_path', '/');
+ini_set('session.cookie_domain', '');
+ini_set('session.cookie_secure', '0');
+ini_set('session.cookie_httponly', '1');
+ini_set('session.use_strict_mode', '1');
+ini_set('session.use_cookies', '1');
+ini_set('session.use_only_cookies', '1');
+
 session_start();
 
-include_once '../../db_connection.php';
-require_once '../Configs/Constants.php';
+include_once __DIR__ . '/../../db_connection.php';
+require_once __DIR__ . '/../Configs/Constants.php';
 
 use App\Controllers\UserController;
 
-$user_controller = new UserController($conn, $db_name);
+$user_controller = new UserController($conn, $_ENV['DATABASE']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sanitizedUserName = sanitizeInput($_POST['username']);
@@ -19,43 +28,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId = $user_controller->loginUser($sanitizedUserName, $password);
             loginAndRedirect($user_controller, $userId);
         } catch (Exception $e) {
-            redirectWithError('../../index.php', $e->getMessage());
-            exit();
+            redirectWithError($e->getMessage());
         }
     } elseif ($_POST['action'] === 'register') {
         try {
             $userId = $user_controller->createNewUser($sanitizedUserName, $password);
             loginAndRedirect($user_controller, $userId);
         } catch (Exception $e) {
-            redirectWithError('../../index.php', $e->getMessage());
-            exit();
+            redirectWithError($e->getMessage());
         }
     }
 }
 
-$conn->close();
+function sanitizeInput(string $input): string
+{
+    return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
 
 function loginAndRedirect(UserController $user_controller, int $userId): void
 {
-    $username = $user_controller->getUserNameById($userId);
-    $userConfigs = $user_controller->getUserConfig($userId);
-
     $_SESSION['user_id'] = $userId;
-    $_SESSION['user_name'] = $username;
-    $_SESSION['user_configs'] = $userConfigs;
+    $_SESSION['user_name'] = $user_controller->getUserNameById($userId);
 
-    header('Location: ../../src/Views/game.php?username=' . urlencode($username));
+    // Force session write
+    session_write_close();
+
+    // Redirect with absolute path
+    header('Location: /src/Views/game.php');
     exit();
 }
 
-function sanitizeInput(string $input): string
+function redirectWithError(string $error): void
 {
-    return filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-}
+    $_SESSION['error'] = $error;
 
-function redirectWithError(string $location, string $errorMessage): void
-{
-    header('Location: ' . $location . '?error=' . urlencode($errorMessage));
+    // Force session write
+    session_write_close();
+
+    header('Location: /');
     exit();
 }
 
