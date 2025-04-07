@@ -1,10 +1,9 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_name'])) {
+if (isset($_SESSION['user_id'])) {
     $username = (string)$_SESSION['user_name'];
-
-    header('Location: src/Views/game.php?username=' . $username);
+    header('Location: /src/Views/game.php');
     exit();
 }
 

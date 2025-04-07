@@ -5,15 +5,14 @@ namespace App\Controllers;
 use App\Models\User;
 use InvalidArgumentException;
 use RuntimeException;
-use PDO;
 use Exception;
 
 class UserController
 {
     private User $model;
-    private PDO $conn;
+    private $conn;
 
-    public function __construct(PDO $conn, string $db_name)
+    public function __construct($conn, string $db_name)
     {
         $this->model = new User($conn);
         $this->conn = $conn;
@@ -21,102 +20,128 @@ class UserController
 
     public function createNewUser(string $username, string $password): int
     {
-        $user_name_to_lower_case = strtolower($username);
-        $user_exists = $this->doesUserExist($user_name_to_lower_case);
+        try {
+            error_log("Starting user creation for username: " . $username);
 
-        if ($user_exists) {
-            throw new Exception('User already exists');
+            // Create the user and their configs
+            $userId = $this->model->createNewUser($username, $password);
+            error_log("User created with ID: " . $userId);
+
+            return $userId;
+        } catch (Exception $e) {
+            error_log("Error in UserController createNewUser: " . $e->getMessage());
+            throw new RuntimeException("Failed to create user: " . $e->getMessage());
         }
-
-        $username_cleaned = htmlspecialchars($user_name_to_lower_case, ENT_QUOTES, 'UTF-8');
-
-        return $this->model->createNewUser($username_cleaned, $password);
     }
 
     public function loginUser(string $username, string $password): int
     {
-        $user_name_to_lower_case = strtolower($username);
-        $user_exists = $this->doesUserExist($user_name_to_lower_case);
+        try {
+            error_log("Starting login for username: " . $username);
 
-        if (!$user_exists) {
-            throw new Exception('User does not exist');
+            $userId = $this->model->getUserIdByUsername($username);
+            error_log("Found user ID: " . ($userId ?? 'null'));
+
+            if (!$userId) {
+                error_log("User does not exist");
+                throw new InvalidArgumentException("User does not exist");
+            }
+
+            error_log("Verifying password for user ID: " . $userId);
+            if (!$this->model->verifyPassword($userId, $password)) {
+                error_log("Invalid password for user ID: " . $userId);
+                throw new InvalidArgumentException("Invalid password");
+            }
+            error_log("Password verified successfully for user ID: " . $userId);
+
+            return $userId;
+        } catch (Exception $e) {
+            error_log("Login failed: " . $e->getMessage());
+            throw new RuntimeException("Login failed: " . $e->getMessage());
         }
-
-        $user_id = $this->getUserIdByUsername($user_name_to_lower_case);
-        $is_password_correct = $this->verifyPassword($user_id, $password);
-
-        if (!$is_password_correct) {
-            throw new Exception('Incorrect password');
-        }
-
-        return $user_id;
     }
 
     public function doesUserExist(string $username): bool
     {
-        return $this->model->doesUserExist($username);
+        try {
+            return $this->model->doesUserExist($username);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to check user existence: " . $e->getMessage());
+        }
     }
 
     public function getUserIdByUsername(string $username): int
     {
-        return $this->model->getUserIdByUsername($username);
+        try {
+            return $this->model->getUserIdByUsername($username);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to get user ID: " . $e->getMessage());
+        }
     }
 
     public function verifyPassword(int $user_id, string $password): bool
     {
-        $hashed_password = $this->model->getHashedPasswordByUserId($user_id);
-        return password_verify($password, $hashed_password);
+        try {
+            return $this->model->verifyPassword($user_id, $password);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to verify password: " . $e->getMessage());
+        }
     }
 
     public function setUserConfigs(int $user_id): void
     {
-        $this->model->insertDefaultUserConfigs($user_id);
+        try {
+            $this->model->insertDefaultUserConfigs($user_id);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to set user configs: " . $e->getMessage());
+        }
     }
 
     public function getUserNameById(int $user_id): string
     {
-        return $this->model->getUserNameById($user_id);
+        try {
+            return $this->model->getUserNameById($user_id);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to get username: " . $e->getMessage());
+        }
     }
 
     public function getUserConfig(int $user_id): array
     {
-        $user_configs = $this->model->getUserConfig($user_id);
-
-        if (empty($user_configs)) {
-            $this->setUserConfigs($user_id);
-            $user_configs = $this->model->getUserConfig($user_id);
+        try {
+            return $this->model->getUserConfig($user_id);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to get user config: " . $e->getMessage());
         }
-        return $user_configs;
     }
 
     public function getTrophies(int $user_id): int
     {
-        return $this->model->getTrophies($user_id);
+        try {
+            return $this->model->getTrophies($user_id);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to get trophies: " . $e->getMessage());
+        }
     }
 
     public function updateData(int $user_id, string $action): string
     {
-        $this->validateUserIdAndAction($user_id, $action);
-
-        if ($action === 'add') {
-            $result = $this->model->addTrophy($user_id);
-        } else if ($action === 'reset') {
-            $result = $this->model->resetTrophies($user_id);
-        } else {
-            throw new InvalidArgumentException("Invalid action.");
+        try {
+            $this->validateUserIdAndAction($user_id, $action);
+            return $this->model->updateData($user_id, $action);
+        } catch (Exception $e) {
+            throw new RuntimeException("Failed to update data: " . $e->getMessage());
         }
-
-        if (!$result) {
-            throw new RuntimeException("Error updating data: " . $this->conn->errorInfo()[2]);
-        }
-
-        return "Data updated successfully. User id: " . $user_id;
     }
 
     private function validateUserIdAndAction(int $user_id, string $action): void
     {
-        if (empty($user_id) || empty($action)) {
-            throw new InvalidArgumentException("User ID and action are required.");
+        if ($user_id <= 0) {
+            throw new InvalidArgumentException("Invalid user ID");
+        }
+
+        if (!in_array($action, ['win', 'lose', 'draw'])) {
+            throw new InvalidArgumentException("Invalid action");
         }
     }
 }
