@@ -56,14 +56,14 @@ jobs:
           # Create a clean directory for the deployment package
           mkdir -p deploy
           # Copy only necessary files
-          cp -r api assets docs src styles tests vendor deploy/ 2>/dev/null || true
+          cp -r api assets docs src styles tests vendor .platform deploy/ 2>/dev/null || true
           cp .env.example aws_connection.php composer.json composer.lock db_connection.php db_init.php index.php render.yaml Procfile deploy/ 2>/dev/null || true
           # Copy .ebextensions if it exists
           if [ -d ".ebextensions" ]; then
             cp -r .ebextensions deploy/
           fi
           # Create the zip file
-          cd deploy && zip -r ../app.zip . && cd ..
+          cd deploy && zip -r ../app.zip . -x "*.git*" "*.DS_Store" && cd ..
 
       - name: Validate deployment package
         run: |
