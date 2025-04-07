@@ -31,13 +31,34 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '18'
 
       - name: Install Node.js dependencies
         run: npm install
 
+      - name: Build assets
+        run: npm run build
+
       - name: Prepare deployment package
-        run: zip -r app.zip . -x ".git/*" "tests/*" "*.gitignore" "node_modules/*"
+        run: |
+          # Create a clean directory for the deployment package
+          mkdir -p deploy
+          # Copy only necessary files
+          cp -r app bootstrap config database public resources routes storage vendor deploy/
+          cp artisan composer.json composer.lock package.json package-lock.json deploy/
+          # Create the zip file
+          cd deploy && zip -r ../app.zip . && cd ..
+
+      - name: Validate deployment package
+        run: |
+          if [ ! -f app.zip ]; then
+            echo "Deployment package not created"
+            exit 1
+          fi
+          if [ $(stat -f%z app.zip) -lt 1000 ]; then
+            echo "Deployment package is too small"
+            exit 1
+          fi
 
       - name: Log Environment Variables
         run: |
