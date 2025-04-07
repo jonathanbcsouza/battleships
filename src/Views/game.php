@@ -20,15 +20,15 @@
 
     <section class="game-stats">
         <div class="stat-item">
-            <span id="rocketsIcon"></span>
-            <span id="rockets"></span>
+            <span id="rocketsIcon"><?php echo $logged_user_configs['ROCKET_ICON']; ?></span>
+            <span id="rockets"><?php echo $logged_user_configs['NUM_ROCKETS']; ?></span>
         </div>
         <div class="stat-item">
-            <span id="shipsDestroyedIcon"></span>
-            <span id="shipsDestroyed"></span>
+            <span id="shipsDestroyedIcon"><?php echo $logged_user_configs['EXPLOSION_ICON']; ?></span>
+            <span id="shipsDestroyed">0</span>
         </div>
         <div class="stat-item">
-            <span id="trophiesIcon"></span>
+            <span id="trophiesIcon"><?php echo $logged_user_configs['TROPHIE_ICON']; ?></span>
             <span id="trophies"><?php echo $trophies; ?></span>
         </div>
     </section>
@@ -46,9 +46,21 @@
         </div>
     </section>
 
-
 </main>
 
+<script>
+    // Make user configs available to JavaScript as an array of objects
+    window.PHP_SESSIONS = <?php
+                            $configArray = [];
+                            foreach ($logged_user_configs as $name => $value) {
+                                $configArray[] = [
+                                    'config_name' => $name,
+                                    'config_value' => $value
+                                ];
+                            }
+                            echo json_encode($configArray);
+                            ?>;
+</script>
 <script type="module" src="../index.js"></script>
 
 <?php include './partials/footer.php'; ?>

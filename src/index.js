@@ -54,6 +54,10 @@ let gameState = {
   state: 'init',
 };
 
+// Add debug logging
+console.log('Game state initialized:', gameState);
+console.log('User defined configs:', userDefinedConfigs);
+
 uiElements.startBtn.addEventListener('click', playGame);
 uiElements.restartBtn.style.display = 'none';
 uiElements.restartBtn.addEventListener('click', resetGame);
@@ -68,12 +72,6 @@ updateScreen(
   uiElements.msgContainer,
   welcomeMessage(userNameValue, gameState.shipsCount, gameState.rocketsCount)
 );
-
-updateScreen(uiElements.rockets, userDefinedConfigs.NUM_ROCKETS);
-updateScreen(uiElements.shipsDestroyed, 0);
-updateScreen(uiElements.rocketsIcon, userDefinedConfigs.ROCKET_ICON);
-updateScreen(uiElements.shipsDestroyedIcon, userDefinedConfigs.EXPLOSION_ICON);
-updateScreen(uiElements.trophiesIcon, userDefinedConfigs.TROPHIE_ICON);
 
 async function playGame() {
   if (gameState.state === 'init') {

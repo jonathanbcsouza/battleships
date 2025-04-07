@@ -34,13 +34,13 @@ async function handleScore(user_id, action) {
 
   const data = await response.text();
 
-  showAlert(action === 'add' ? 'Trophy Earned!' : 'Score Reset!');
+  showAlert(action === 'win' ? 'Trophy Earned!' : 'Score Reset!');
 
   return action === 'reset';
 }
 
 export async function addScore(user_id) {
-  await handleScore(user_id, 'add');
+  await handleScore(user_id, 'win');
 }
 
 export async function resetScore(user_id) {
