@@ -28,15 +28,27 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --no-dev --optimize-autoloader
 
+      - name: Check if package.json exists
+        id: check_files
+        run: |
+          if [ -f "package.json" ]; then
+            echo "package_json_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "package_json_exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install Node.js
+        if: steps.check_files.outputs.package_json_exists == 'true'
         uses: actions/setup-node@v2
         with:
           node-version: '18'
 
       - name: Install Node.js dependencies
+        if: steps.check_files.outputs.package_json_exists == 'true'
         run: npm install
 
       - name: Build assets
+        if: steps.check_files.outputs.package_json_exists == 'true'
         run: npm run build
 
       - name: Prepare deployment package
@@ -44,8 +56,12 @@ jobs:
           # Create a clean directory for the deployment package
           mkdir -p deploy
           # Copy only necessary files
-          cp -r app bootstrap config database public resources routes storage vendor deploy/
-          cp artisan composer.json composer.lock package.json package-lock.json deploy/
+          cp -r api assets docs src styles tests vendor deploy/ 2>/dev/null || true
+          cp .env.example aws_connection.php composer.json composer.lock db_connection.php db_init.php index.php render.yaml Procfile deploy/ 2>/dev/null || true
+          # Copy .ebextensions if it exists
+          if [ -d ".ebextensions" ]; then
+            cp -r .ebextensions deploy/
+          fi
           # Create the zip file
           cd deploy && zip -r ../app.zip . && cd ..
 
@@ -55,7 +71,7 @@ jobs:
             echo "Deployment package not created"
             exit 1
           fi
-          if [ $(stat -f%z app.zip) -lt 1000 ]; then
+          if [ $(stat -c%s app.zip) -lt 1000 ]; then
             echo "Deployment package is too small"
             exit 1
           fi
