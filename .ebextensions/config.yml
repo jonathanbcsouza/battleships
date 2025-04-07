@@ -1,22 +1,6 @@
 option_settings:
   aws:elasticbeanstalk:application:environment:
-    APP_ENV: 'production'
-    APP_DEBUG: 'false'
-    APP_URL: 'https://battleships-env.eba-icf9wd6h.us-east-1.elasticbeanstalk.com'
+    APP_ENV: production
   aws:elasticbeanstalk:container:php:phpini:
     document_root: /
     memory_limit: 256M
-  aws:elasticbeanstalk:environment:proxy:staticfiles:
-    /assets: /assets
-    /styles: /styles
-
-files:
-  '/etc/httpd/conf.d/https_redirect.conf':
-    mode: '000644'
-    owner: root
-    group: root
-    content: |
-      RewriteEngine On
-      RewriteCond %{HTTP:X-Forwarded-Proto} !https
-      RewriteCond %{HTTP_USER_AGENT} !ELB-HealthChecker
-      RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
