@@ -51,6 +51,12 @@ jobs:
         if: steps.check_files.outputs.package_json_exists == 'true'
         run: npm run build
 
+      - name: Generate version label
+        id: version_label
+        run: |
+          TIMESTAMP=$(date +%Y-%m-%dT%H:%M:%S%z)
+          echo "version=v-${{ github.run_number }}-${{ github.sha }}-${TIMESTAMP}" >> $GITHUB_OUTPUT
+
       - name: Prepare deployment package
         run: |
           # Create a clean directory for the deployment package
@@ -82,6 +88,7 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           echo "EB_ENVIRONMENT_NAME: ${{ secrets.EB_ENVIRONMENT_NAME }}"
           echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
+          echo "VERSION_LABEL: ${{ steps.version_label.outputs.version }}"
 
       - name: Validate Environment Variables
         run: |
@@ -89,6 +96,7 @@ jobs:
           if [[ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]]; then echo "AWS_SECRET_ACCESS_KEY is not set"; exit 1; fi
           if [[ -z "${{ secrets.EB_ENVIRONMENT_NAME }}" ]]; then echo "EB_ENVIRONMENT_NAME is not set"; exit 1; fi
           if [[ -z "${{ secrets.AWS_REGION }}" ]]; then echo "AWS_REGION is not set"; exit 1; fi
+          if [[ -z "${{ steps.version_label.outputs.version }}" ]]; then echo "VERSION_LABEL is not set"; exit 1; fi
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
@@ -98,6 +106,6 @@ jobs:
           application_name: battleships
           environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
           region: ${{ secrets.AWS_REGION }}
-          version_label: v-${{ github.run_number }}-${{ github.sha }}-${{ github.event.head_commit.timestamp }}
+          version_label: ${{ steps.version_label.outputs.version }}
           deployment_package: app.zip
           wait_for_deployment: true
