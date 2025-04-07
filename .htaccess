@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# Handle the root URL
+DirectoryIndex index.php
+
+# Ensure PHP files can be executed
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+# Redirect everything to index.php unless the file exists
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA] 
